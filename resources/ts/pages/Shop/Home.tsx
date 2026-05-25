@@ -50,12 +50,7 @@ const Home = () => {
     if (loading) {
         return (
             <Center minH="100vh" flexDirection="column" gap={4}>
-                <Spinner
-                    color="purple.500"
-                    size="xl"
-                    width="40px"
-                    height="40px"
-                />
+                <Spinner color="black" size="xl" width="40px" height="40px" />
                 <Text fontWeight="bold" color="gray.500">
                     商品を読み込み中...
                 </Text>
@@ -72,7 +67,6 @@ const Home = () => {
                         <Box
                             key={product.id} // 💡 map関数の中では一意のキー（id）が必須です
                             bg="white"
-                            borderRadius="2xl"
                             border="1px solid"
                             borderColor="gray.100"
                             shadow="sm"
@@ -120,22 +114,11 @@ const Home = () => {
                                     >
                                         <Text
                                             fontSize="xs"
-                                            fontWeight="bold"
-                                            color="purple.600"
+                                            textDecoration="underline"
+                                            color="black"
                                         >
                                             {product.category}
                                         </Text>
-                                        {product.is_new && (
-                                            <Badge
-                                                colorPalette="pink"
-                                                variant="solid"
-                                                borderRadius="md"
-                                                px={1.5}
-                                                fontSize="10px"
-                                            >
-                                                NEW
-                                            </Badge>
-                                        )}
                                     </Flex>
 
                                     <Heading
@@ -161,9 +144,8 @@ const Home = () => {
                                     </Text>
 
                                     <Button
-                                        colorPalette="purple"
+                                        colorPalette="black"
                                         w="full"
-                                        borderRadius="xl"
                                         fontWeight="bold"
                                     >
                                         カートに入れる

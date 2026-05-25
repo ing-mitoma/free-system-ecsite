@@ -28,7 +28,7 @@ export default function Header() {
                     <Heading
                         size="lg"
                         fontWeight="black"
-                        color="purple.600"
+                        color="black"
                         asChild // 💡 1. これを追加して、中身の Link コンポーネントに Chakra のデザインを継承させます
                     >
                         {/* 💡 2. as="a" と href="/" の代わりに、Link と to="/" を使います */}

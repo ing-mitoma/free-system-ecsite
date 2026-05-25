@@ -18,8 +18,6 @@ export default function AdminLogin() {
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-
-        // 💡 テスト用の簡易ログインチェック（のちにLaravelのAPIと連動させます）
         if (email === "admin@minimal.com" && password === "password") {
             // ブラウザの記憶（localStorage）に「ログイン中！」のスタンプを押す
             localStorage.setItem("admin_logged_in", "true");
@@ -38,7 +36,6 @@ export default function AdminLogin() {
                 maxW="md"
                 p={8}
                 bg="white"
-                borderRadius="2xl"
                 border="1px solid"
                 borderColor="gray.100"
                 shadow="md"
@@ -49,10 +46,10 @@ export default function AdminLogin() {
                             <Heading
                                 size="xl"
                                 fontWeight="black"
-                                color="purple.600"
+                                color="black"
                                 mb={2}
                             >
-                                MINIMAL ADMIN
+                                FREE SYSTEM
                             </Heading>
                             <Text fontSize="sm" color="gray.500">
                                 管理者アカウントでログインしてください
@@ -74,7 +71,6 @@ export default function AdminLogin() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="admin@minimal.com"
-                                    borderRadius="xl"
                                     bg="gray.50"
                                     variant="subtle"
                                     h="48px"
@@ -97,7 +93,6 @@ export default function AdminLogin() {
                                         setPassword(e.target.value)
                                     }
                                     placeholder="••••••••"
-                                    borderRadius="xl"
                                     bg="gray.50"
                                     variant="subtle"
                                     h="48px"
@@ -108,10 +103,9 @@ export default function AdminLogin() {
 
                         <Button
                             type="submit"
-                            colorPalette="purple"
+                            colorPalette="black"
                             w="full"
                             size="lg"
-                            borderRadius="xl"
                             fontWeight="bold"
                             h="50px"
                         >
