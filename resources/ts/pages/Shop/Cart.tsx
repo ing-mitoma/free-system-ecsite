@@ -56,9 +56,8 @@ export default function Cart() {
                                 key={item.id}
                                 bg="white"
                                 p={5}
-                                borderRadius="2xl"
                                 border="1px solid"
-                                borderColor="gray.100"
+                                borderColor="black"
                                 align="center"
                                 justify="space-between"
                             >
@@ -100,6 +99,7 @@ export default function Cart() {
                                         size="sm"
                                         variant="ghost"
                                         colorPalette="red"
+                                        border="1px solid"
                                     >
                                         削除
                                     </Button>
@@ -146,10 +146,9 @@ export default function Cart() {
 
                     {/* 購入手続きボタン */}
                     <Button
-                        colorPalette="purple"
+                        colorPalette="black"
                         w="full"
                         size="lg"
-                        borderRadius="xl"
                         fontWeight="bold"
                         asChild
                     >

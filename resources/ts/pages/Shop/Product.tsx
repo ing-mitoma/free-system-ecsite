@@ -103,7 +103,6 @@ export default function Product() {
                 {/* 左側：商品画像エリア */}
                 <Box
                     bg="white"
-                    borderRadius="3xl"
                     border="1px solid"
                     borderColor="gray.100"
                     h={{ base: "320px", md: "500px" }}
@@ -122,7 +121,7 @@ export default function Product() {
                         <Text
                             fontSize="sm"
                             fontWeight="bold"
-                            color="purple.600"
+                            color="black"
                             letterSpacing="wider"
                         >
                             {product.category}
@@ -190,23 +189,20 @@ export default function Product() {
                         borderColor="gray.100"
                     >
                         <Button
-                            colorPalette="purple"
+                            colorPalette="black"
                             size="lg"
-                            borderRadius="xl"
                             fontWeight="bold"
                             h="56px"
                             fontSize="md"
                             _hover={{ shadow: "md" }}
                             onClick={() =>
-                                alert(
-                                    `${product.name} をカートに追加しました（数量: 1）`,
-                                )
+                                alert("カートに入れるボタンを押下しました。")
                             }
                         >
                             カートに入れる
                         </Button>
-                        <Text fontSize="xs" color="gray.400" textAlign="center">
-                            🚚 全国一律送料無料 / 2〜3営業日以内に発送予定
+                        <Text fontSize="s" color="gray.400" textAlign="center">
+                            全国一律送料無料 / 2〜3営業日以内に発送予定
                         </Text>
                     </Stack>
                 </Stack>
