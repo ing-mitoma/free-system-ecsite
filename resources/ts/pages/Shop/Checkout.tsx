@@ -47,7 +47,6 @@ export default function Checkout() {
                     <Box
                         bg="white"
                         p={6}
-                        borderRadius="2xl"
                         border="1px solid"
                         borderColor="gray.100"
                         shadow="sm"
@@ -66,14 +65,12 @@ export default function Checkout() {
                                 <SimpleGrid columns={2} gap={4}>
                                     <Input
                                         placeholder="姓（例: 山田）"
-                                        borderRadius="xl"
                                         bg="gray.50"
                                         variant="subtle"
                                         h="48px"
                                     />
                                     <Input
                                         placeholder="名（例: 太郎）"
-                                        borderRadius="xl"
                                         bg="gray.50"
                                         variant="subtle"
                                         h="48px"
@@ -94,7 +91,6 @@ export default function Checkout() {
                                 <Input
                                     type="email"
                                     placeholder="example@minimal.com"
-                                    borderRadius="xl"
                                     bg="gray.50"
                                     variant="subtle"
                                     h="48px"
@@ -115,21 +111,18 @@ export default function Checkout() {
                                     <Input
                                         placeholder="郵便番号（例: 123-4567）"
                                         maxW="240px"
-                                        borderRadius="xl"
                                         bg="gray.50"
                                         variant="subtle"
                                         h="48px"
                                     />
                                     <Input
                                         placeholder="都道府県・市区町村（例: 東京都渋谷区神南）"
-                                        borderRadius="xl"
                                         bg="gray.50"
                                         variant="subtle"
                                         h="48px"
                                     />
                                     <Input
                                         placeholder="番地・ビル名・部屋番号"
-                                        borderRadius="xl"
                                         bg="gray.50"
                                         variant="subtle"
                                         h="48px"
@@ -144,7 +137,6 @@ export default function Checkout() {
                 <Box
                     bg="white"
                     p={6}
-                    borderRadius="2xl"
                     border="1px solid"
                     borderColor="gray.100"
                     shadow="sm"
@@ -189,10 +181,9 @@ export default function Checkout() {
 
                     {/* 注文確定ボタン */}
                     <Button
-                        colorPalette="purple"
+                        colorPalette="black"
                         w="full"
                         size="lg"
-                        borderRadius="xl"
                         fontWeight="bold"
                         h="56px"
                         _hover={{ shadow: "md" }}

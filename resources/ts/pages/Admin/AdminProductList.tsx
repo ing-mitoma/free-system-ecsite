@@ -91,7 +91,6 @@ export default function AdminProductList() {
                 <Box
                     bg="white"
                     p={6}
-                    borderRadius="2xl"
                     border="1px solid"
                     borderColor="gray.100"
                     shadow="sm"
@@ -118,7 +117,6 @@ export default function AdminProductList() {
                                                 fontSize="2xl"
                                                 bg="gray.50"
                                                 p={2}
-                                                borderRadius="lg"
                                             >
                                                 {product.emoji}
                                             </Box>
@@ -179,13 +177,7 @@ export default function AdminProductList() {
                     alignItems="center"
                     justifyContent="center"
                 >
-                    <Box
-                        bg="white"
-                        p={8}
-                        borderRadius="3xl"
-                        w="lg"
-                        shadow="2xl"
-                    >
+                    <Box bg="white" p={8} w="lg" shadow="2xl">
                         <Heading size="md" mb={6}>
                             {editingProduct.id === 0
                                 ? "新規商品の登録"
@@ -198,7 +190,6 @@ export default function AdminProductList() {
                                 </Field.Label>
                                 <Input
                                     defaultValue={editingProduct.name}
-                                    borderRadius="xl"
                                     bg="gray.50"
                                     variant="subtle"
                                 />
@@ -214,7 +205,6 @@ export default function AdminProductList() {
                                     <Input
                                         type="number"
                                         defaultValue={editingProduct.price}
-                                        borderRadius="xl"
                                         bg="gray.50"
                                         variant="subtle"
                                     />
@@ -226,12 +216,48 @@ export default function AdminProductList() {
                                     >
                                         カテゴリ
                                     </Field.Label>
-                                    <Input
+                                    <select
                                         defaultValue={editingProduct.category}
-                                        borderRadius="xl"
-                                        bg="gray.50"
-                                        variant="subtle"
-                                    />
+                                        style={{
+                                            width: "100%",
+                                            height: "40px", // Inputの高さに合わせる
+                                            padding: "0 12px",
+                                            fontSize: "14px",
+                                            borderRadius: "12px", // Inputの丸み(xl)に合わせる
+                                            border: "none", // subtleに合わせるため枠線は無し
+                                            backgroundColor: "#F7FAFC", // gray.50 のカラーコード
+                                            outline: "none",
+                                            cursor: "pointer",
+                                            color: "#1A202C", // 読みやすい文字色
+                                        }}
+                                    >
+                                        {/* 💡 先ほど追加した30個のダミーデータに対応するマスター */}
+                                        <option value="財布・小物">
+                                            👛 財布・小物
+                                        </option>
+                                        <option value="バッグ">
+                                            👜 バッグ
+                                        </option>
+                                        <option value="シューズ">
+                                            👟 シューズ
+                                        </option>
+                                        <option value="アパレル">
+                                            🧥 アパレル
+                                        </option>
+                                        <option value="アクセサリー">
+                                            👓 アクセサリー
+                                        </option>
+                                        <option value="時計">⌚ 時計</option>
+                                        <option value="ガジェット">
+                                            🎧 ガジェット
+                                        </option>
+                                        <option value="ステーショナリー">
+                                            ✏️ ステーショナリー
+                                        </option>
+                                        <option value="ライフスタイル">
+                                            🥛 ライフスタイル
+                                        </option>
+                                    </select>
                                 </Field.Root>
                             </Flex>
                             <Field.Root>
@@ -240,7 +266,6 @@ export default function AdminProductList() {
                                 </Field.Label>
                                 <Textarea
                                     defaultValue={editingProduct.description}
-                                    borderRadius="xl"
                                     bg="gray.50"
                                     variant="subtle"
                                     rows={3}
@@ -249,8 +274,7 @@ export default function AdminProductList() {
                             <Flex gap={3} pt={4}>
                                 <Button
                                     flex="1"
-                                    colorPalette="purple"
-                                    borderRadius="xl"
+                                    colorPalette="black"
                                     onClick={() => {
                                         alert("保存しました（テスト）");
                                         setIsDialogOpen(false);
@@ -260,7 +284,6 @@ export default function AdminProductList() {
                                 </Button>
                                 <Button
                                     variant="ghost"
-                                    borderRadius="xl"
                                     onClick={() => setIsDialogOpen(false)}
                                 >
                                     キャンセル

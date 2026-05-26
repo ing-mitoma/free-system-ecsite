@@ -51,7 +51,6 @@ export default function AdminDashboard() {
                     <Box
                         bg="white"
                         p={6}
-                        borderRadius="2xl"
                         border="1px solid"
                         borderColor="gray.100"
                         shadow="sm"
@@ -76,7 +75,6 @@ export default function AdminDashboard() {
                     <Box
                         bg="white"
                         p={6}
-                        borderRadius="2xl"
                         border="1px solid"
                         borderColor="gray.100"
                         shadow="sm"
