@@ -1,8 +1,8 @@
 resources/ts/
-├── main.tsx             # 頂点（さっき提示してくれたコード）
-├── router.tsx           # 🎛️ URLの行き先リスト（URLとページを紐付ける）
+├── main.tsx             main画面
+├── router.tsx           urlの管理
 │
-├── layouts/             # 🖼️ 画面の「共通枠」を入れるフォルダ
+├── layouts/             
 │   ├── ShopLayout.tsx   # 一般画面用（ヘッダー・フッター付き）
 │   └── AdminLayout.tsx  # 管理画面用（左側にサイドバー付き）
 │
@@ -12,9 +12,13 @@ resources/ts/
 │   │   ├── Product.tsx  # 商品詳細ページ（「カートに入れる」がある）
 │   │   └── Cart.tsx     # カート画面（購入手続きへ進む）
 │   └── Admin/           # 📊 管理者向け画面
-│       ├── Dashboard.tsx# ダッシュボード（売上グラフなど）
+│       ├── 
 │       └── Products.tsx # 商品管理（新規登録フォームなど）
 │
-└── components/          # 🧱 使い回す小さな部品（カードやボタンなど）
-    ├── ProductCard.tsx  # 商品を綺麗に見せるカード（Chakra UI）
-    └── Header.tsx       # 一般画面用のナビゲーションバー
+└── components/          コンポーネントの管理
+    ├── user 
+               ├──  Footer.tsx   user画面用のフッター
+               └──   Header.tsx  user画面用のヘッダー
+    ├──admin
+            └── Sidebar.tsx 管理画面用のサイドバーコンポーネント
+            └── AdminAuthGuard.tsx　管理画面のログイン監視用コンポーネント
