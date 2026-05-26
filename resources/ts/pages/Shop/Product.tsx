@@ -184,15 +184,13 @@ export default function Product() {
                             fontSize="md"
                             _hover={{ shadow: "md" }}
                             onClick={() =>
-                                alert(
-                                    `${product.name} をカートに追加しました（数量: 1）`,
-                                )
+                                alert("カートに入れるボタンを押下しました。")
                             }
                         >
                             カートに入れる
                         </Button>
-                        <Text fontSize="xs" color="gray.400" textAlign="center">
-                            🚚 全国一律送料無料 / 2〜3営業日以内に発送予定
+                        <Text fontSize="s" color="gray.400" textAlign="center">
+                            全国一律送料無料 / 2〜3営業日以内に発送予定
                         </Text>
                     </Stack>
                 </Stack>

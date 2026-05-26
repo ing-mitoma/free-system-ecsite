@@ -18,8 +18,6 @@ export default function AdminLogin() {
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-
-        // 💡 テスト用の簡易ログインチェック（のちにLaravelのAPIと連動させます）
         if (email === "admin@minimal.com" && password === "password") {
             // ブラウザの記憶（localStorage）に「ログイン中！」のスタンプを押す
             localStorage.setItem("admin_logged_in", "true");

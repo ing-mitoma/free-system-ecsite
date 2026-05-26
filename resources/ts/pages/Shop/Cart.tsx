@@ -57,7 +57,7 @@ export default function Cart() {
                                 bg="white"
                                 p={5}
                                 border="1px solid"
-                                borderColor="gray.100"
+                                borderColor="black"
                                 align="center"
                                 justify="space-between"
                             >
@@ -94,6 +94,7 @@ export default function Cart() {
                                         size="sm"
                                         variant="ghost"
                                         colorPalette="red"
+                                        border="1px solid"
                                     >
                                         削除
                                     </Button>
