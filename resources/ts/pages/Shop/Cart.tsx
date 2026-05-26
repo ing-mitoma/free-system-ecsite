@@ -63,12 +63,7 @@ export default function Cart() {
                             >
                                 {/* 左端：商品の絵文字と名前 */}
                                 <Flex align="center" gap={4}>
-                                    <Box
-                                        fontSize="4xl"
-                                        bg="gray.50"
-                                        p={2}
-                                        borderRadius="xl"
-                                    >
+                                    <Box fontSize="4xl" bg="gray.50" p={2}>
                                         {item.emoji}
                                     </Box>
                                     <Box>
@@ -115,7 +110,6 @@ export default function Cart() {
                     w="full"
                     bg="white"
                     p={6}
-                    borderRadius="2xl"
                     border="1px solid"
                     borderColor="gray.100"
                 >

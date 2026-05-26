@@ -114,7 +114,7 @@ const Home = () => {
                                     >
                                         <Text
                                             fontSize="xs"
-                                            textDecoration="underline"
+                                            fontWeight="bold"
                                             color="black"
                                         >
                                             {product.category}

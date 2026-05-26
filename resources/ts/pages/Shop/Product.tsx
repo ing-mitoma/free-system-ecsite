@@ -56,7 +56,7 @@ export default function Product() {
         return (
             <Center minH="100vh" flexDirection="column" gap={4}>
                 <Spinner
-                    color="purple.500"
+                    color="black.500"
                     size="xl"
                     width="40px"
                     height="40px"
@@ -75,7 +75,7 @@ export default function Product() {
                 <Text color="gray.500" mb={4} fontSize="lg">
                     ご指定の商品は存在しないか、売り切れました。
                 </Text>
-                <Button asChild colorPalette="purple" borderRadius="xl">
+                <Button asChild colorPalette="black" borderRadius="xl">
                     <Link to="/">ショップトップへ戻る</Link>
                 </Button>
             </Container>
@@ -121,23 +121,11 @@ export default function Product() {
                         <Text
                             fontSize="sm"
                             fontWeight="bold"
-                            color="black"
+                            color="black.600"
                             letterSpacing="wider"
                         >
                             {product.category}
                         </Text>
-                        {product.is_new && (
-                            <Badge
-                                colorPalette="pink"
-                                variant="solid"
-                                borderRadius="md"
-                                px={2.5}
-                                py={0.5}
-                                fontSize="xs"
-                            >
-                                NEW
-                            </Badge>
-                        )}
                     </HStack>
 
                     <Heading

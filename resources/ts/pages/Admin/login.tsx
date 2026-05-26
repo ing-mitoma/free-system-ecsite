@@ -46,7 +46,7 @@ export default function AdminLogin() {
                             <Heading
                                 size="xl"
                                 fontWeight="black"
-                                color="black"
+                                color="black.600"
                                 mb={2}
                             >
                                 FREE SYSTEM

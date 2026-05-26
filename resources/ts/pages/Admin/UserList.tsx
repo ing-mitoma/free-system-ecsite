@@ -117,7 +117,6 @@ export default function AdminUserList() {
                 <Box
                     bg="white"
                     p={6}
-                    borderRadius="2xl"
                     border="1px solid"
                     borderColor="gray.100"
                     shadow="sm"
@@ -146,7 +145,7 @@ export default function AdminUserList() {
                                         <Badge
                                             colorPalette={
                                                 user.role === "最高管理者"
-                                                    ? "purple"
+                                                    ? "black"
                                                     : "gray"
                                             }
                                         >
@@ -186,7 +185,7 @@ export default function AdminUserList() {
 
             {/* 🎯 追加・編集用の共通ダイアログ（モーダル窓） */}
             <Dialog.Root open={isOpen} onOpenChange={(e) => setIsOpen(e.open)}>
-                <Dialog.Content borderRadius="2xl" p={6}>
+                <Dialog.Content p={6}>
                     <Dialog.Header>
                         <Dialog.Title fontWeight="black" fontSize="xl">
                             {editingUser
@@ -237,7 +236,6 @@ export default function AdminUserList() {
                                         style={{
                                             width: "100%",
                                             padding: "8px",
-                                            borderRadius: "6px",
                                             border: "1px solid #E2E8F0",
                                         }}
                                     >
@@ -261,7 +259,7 @@ export default function AdminUserList() {
                             </Button>
                             <Button
                                 type="submit"
-                                colorPalette="purple"
+                                colorPalette="black"
                                 fontWeight="bold"
                             >
                                 保存する
