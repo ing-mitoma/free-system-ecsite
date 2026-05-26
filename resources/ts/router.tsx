@@ -6,9 +6,10 @@ import Cart from "./pages/Shop/Cart";
 import Product from "./pages/Shop/Product";
 import Checkout from "./pages/Shop/Checkout";
 import AdminLogin from "./pages/Admin/login";
-import AdminAuthGuard from "./components/AdminAuthGuard";
+import AdminAuthGuard from "./components/admin/AdminAuthGuard";
 import AdminDashboard from "./pages/Admin/Dashboard";
 import AdminProductList from "./pages/Admin/AdminProductList";
+import AdminUserList from "./pages/Admin/UserList";
 
 export const router = createBrowserRouter([
     {
@@ -60,10 +61,18 @@ export const router = createBrowserRouter([
         ),
     },
     {
-        path: "/admin/products", // 💡 追加
+        path: "/admin/products",
         element: (
             <AdminAuthGuard>
                 <AdminProductList />
+            </AdminAuthGuard>
+        ),
+    },
+    {
+        path: "/admin/users", // 💡 追加
+        element: (
+            <AdminAuthGuard>
+                <AdminUserList />
             </AdminAuthGuard>
         ),
     },

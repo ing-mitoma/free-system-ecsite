@@ -14,7 +14,8 @@ import {
     Dialog,
     Field,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Sidebar from "../../components/admin/SIdebar";
 
 // 💡 商品の型定義
 interface Product {
@@ -63,40 +64,13 @@ export default function AdminProductList() {
             setProducts(products.filter((p) => p.id !== id));
         }
     };
+    const navigate = useNavigate();
 
     return (
         <Flex h="100vh" bg="gray.50" overflow="hidden">
             {/* サイドバー（Dashboard.tsxと同じものを推奨ですが、簡易版を置きます） */}
-            <Box
-                w="260px"
-                bg="gray.900"
-                color="white"
-                p={6}
-                display={{ base: "none", md: "block" }}
-            >
-                <Heading size="md" mb={8} color="purple.400">
-                    MINIMAL ADMIN
-                </Heading>
-                <Stack gap={2}>
-                    <Box
-                        p={3}
-                        borderRadius="xl"
-                        _hover={{ bg: "gray.800" }}
-                        color="gray.400"
-                    >
-                        <Link to="/admin">📊 ダッシュボード</Link>
-                    </Box>
-                    <Box
-                        p={3}
-                        borderRadius="xl"
-                        bg="gray.800"
-                        fontWeight="bold"
-                    >
-                        <Link to="/admin/products">📦 商品管理</Link>
-                    </Box>
-                </Stack>
-            </Box>
 
+            <Sidebar onLogout={() => navigate("/admin/login")} />
             {/* メインエリア */}
             <Box flex="1" p={10} overflowY="auto">
                 <Flex justify="space-between" align="center" mb={8}>
@@ -108,12 +82,8 @@ export default function AdminProductList() {
                             商品の追加・編集・在庫の確認ができます。
                         </Text>
                     </Box>
-                    <Button
-                        colorPalette="purple"
-                        borderRadius="xl"
-                        onClick={handleAdd}
-                    >
-                        ✨ 新規商品を追加
+                    <Button colorPalette="black" onClick={handleAdd}>
+                        + 新規商品を追加
                     </Button>
                 </Flex>
 
@@ -194,7 +164,6 @@ export default function AdminProductList() {
                     </Table.Root>
                 </Box>
             </Box>
-
             {/* 🛠️ 商品追加・編集用のダイアログ（ポップアップ） */}
             {/* Chakra UI v3 の Dialog/Modal システム */}
             {isDialogOpen && editingProduct && (
