@@ -25,22 +25,24 @@ export default function Sidebar({ onLogout }: SidebarProps) {
     return (
         <Box
             w="260px"
-            bg="gray.900"
+            bg="black"
             color="white"
+            h="100hv"
             p={6}
             display={{ base: "none", md: "flex" }}
             flexDirection="column"
         >
+            <Heading
+                size="md"
+                mb={8}
+                fontWeight="black"
+                color="white"
+                textAlign="center"
+                asChild
+            >
+                <Link to="/admin/home">FREE SYSTEM</Link>
+            </Heading>
             <Box flex="1">
-                <Heading
-                    size="md"
-                    mb={8}
-                    fontWeight="black"
-                    letterSpacing="wider"
-                    color="white"
-                >
-                    FREE SYSTEM
-                </Heading>
                 <VStack gap={2} align="stretch">
                     <SidebarButton title={"ホーム"} page={"home"} />
                     <SidebarButton title={"商品一覧"} page={"products"} />
@@ -50,7 +52,7 @@ export default function Sidebar({ onLogout }: SidebarProps) {
             <Button
                 fontWeight={"bold"}
                 variant="ghost"
-                color="gray"
+                color="red"
                 onClick={handleLogout}
             >
                 ログアウト

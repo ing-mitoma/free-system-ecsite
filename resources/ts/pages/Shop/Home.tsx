@@ -12,15 +12,15 @@ import {
     Spinner,
     Center,
 } from "@chakra-ui/react";
+import HomeCard from "../../components/user/UserHomeCard";
 
-// 💡 TypeScriptの型定義（LaravelのAPIから届くデータの形を定義）
 interface Product {
     id: number;
     name: string;
-    price: number; // 数値型にしてあとでフォーマットしやすくします
+    price: number;
     category: string;
     emoji: string;
-    is_new: boolean; // Laravel側と合わせてスネークケースに
+    is_new: boolean;
 }
 
 const Home = () => {
@@ -46,7 +46,6 @@ const Home = () => {
             });
     }, []); // 空の配列 [] は「最初の1回だけ実行する」という意味
 
-    // ⏳ もしロード中なら、Chakra UIのオシャレなぐるぐる（Spinner）を画面中央に出す
     if (loading) {
         return (
             <Center minH="100vh" flexDirection="column" gap={4}>
@@ -61,98 +60,9 @@ const Home = () => {
     return (
         <Box minH="100vh" bg="gray.50" color="gray.800" pb={16}>
             <Container maxW="6xl" mt={12}>
-                {/* 🛍️ 商品グリッド（APIの数だけ map 関数で自動生成） */}
                 <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={8}>
                     {products.map((product) => (
-                        <Box
-                            key={product.id} // 💡 map関数の中では一意のキー（id）が必須です
-                            bg="white"
-                            border="1px solid"
-                            borderColor="gray.100"
-                            shadow="sm"
-                            overflow="hidden"
-                            _hover={{
-                                shadow: "md",
-                                transform: "translateY(-4px)",
-                            }}
-                            transition="all 0.3s"
-                            display="flex"
-                            flexDirection="column"
-                            asChild
-                        >
-                            {/* 💡 3. カード全体を囲うように Link を配置（バッククォートでURLにIDを埋め込む） */}
-                            <Link
-                                to={`/product/${product.id}`}
-                                style={{
-                                    textDecoration: "none",
-                                    color: "inherit",
-                                }}
-                            >
-                                {/* 商品画像エリア */}
-                                <Box
-                                    bg="gray.50"
-                                    h="200px"
-                                    display="flex"
-                                    alignItems="center"
-                                    justifyContent="center"
-                                    fontSize="6xl"
-                                >
-                                    {product.emoji}
-                                </Box>
-
-                                {/* 商品情報エリア */}
-                                <Box
-                                    p={6}
-                                    flex="1"
-                                    display="flex"
-                                    flexDirection="column"
-                                >
-                                    <Flex
-                                        justify="space-between"
-                                        align="center"
-                                        mb={2}
-                                    >
-                                        <Text
-                                            fontSize="xs"
-                                            fontWeight="bold"
-                                            color="black"
-                                        >
-                                            {product.category}
-                                        </Text>
-                                    </Flex>
-
-                                    <Heading
-                                        as="h3"
-                                        size="sm"
-                                        fontWeight="bold"
-                                        mb={2}
-                                        color="gray.900"
-                                        lineClamp={2}
-                                        flex="1"
-                                    >
-                                        {product.name}
-                                    </Heading>
-
-                                    {/* 💡 数字の価格を日本円表記（¥12,800など）に綺麗にフォーマット */}
-                                    <Text
-                                        fontSize="lg"
-                                        fontWeight="black"
-                                        color="gray.900"
-                                        mb={4}
-                                    >
-                                        ¥{product.price.toLocaleString()}
-                                    </Text>
-
-                                    <Button
-                                        colorPalette="black"
-                                        w="full"
-                                        fontWeight="bold"
-                                    >
-                                        カートに入れる
-                                    </Button>
-                                </Box>
-                            </Link>
-                        </Box>
+                        <HomeCard product={product} />
                     ))}
                 </SimpleGrid>
 

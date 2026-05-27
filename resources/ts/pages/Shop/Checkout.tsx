@@ -10,6 +10,8 @@ import {
     Stack,
     Input,
     SimpleGrid,
+    Field,
+    Switch,
 } from "@chakra-ui/react";
 
 export default function Checkout() {
@@ -37,6 +39,38 @@ export default function Checkout() {
             </Heading>
 
             {/* PCでは 2カラム（左: 入力, 右: 金額）、スマホでは縦1列になるレイアウト */}
+            <SimpleGrid
+                columns={{ base: 1, lg: 3 }}
+                gap={8}
+                alignItems="flex-start"
+            >
+                <Stack
+                    gap="8"
+                    maxW="sm"
+                    css={{ "--field-label-width": "96px" }}
+                >
+                    <Field.Root>
+                        <Field.Label>お名前</Field.Label>
+                        <Input placeholder="田中" />
+                        <Input placeholder="太郎" />
+                    </Field.Root>
+
+                    <Field.Root>
+                        <Field.Label>メールアドレス</Field.Label>
+                        <Input placeholder="me@example.com" />
+                    </Field.Root>
+                    <Field.Root>
+                        <Field.Label>Email</Field.Label>
+                        <Input placeholder="me@example.com" />
+                    </Field.Root>
+                    <Field.Root>
+                        <Field.Label>配送先住所</Field.Label>
+                        <Input placeholder="郵便番号（例: 123-4567）" />
+                        <Input placeholder="都道府県・市区町村（例: 東京都渋谷区神南）" />
+                        <Input placeholder="番地・ビル名・部屋番号" />
+                    </Field.Root>
+                </Stack>
+            </SimpleGrid>
             <SimpleGrid
                 columns={{ base: 1, lg: 3 }}
                 gap={8}

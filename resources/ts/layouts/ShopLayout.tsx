@@ -9,8 +9,6 @@ interface ShopLayoutProps {
 
 export default function ShopLayout({ children }: ShopLayoutProps) {
     return (
-        // Flexを縦並び（column）にし、minH="100vh" にすることで、
-        // ページの中身が少なくてもフッターが必ず画面の一番下に固定される実務のテクニックです
         <Flex direction="column" minH="100vh" bg="gray.50">
             <Header />
 
