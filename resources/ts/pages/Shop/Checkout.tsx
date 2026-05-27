@@ -12,6 +12,9 @@ import {
     SimpleGrid,
     Field,
     Switch,
+    VStack,
+    DataList,
+    Separator,
 } from "@chakra-ui/react";
 
 export default function Checkout() {
@@ -38,45 +41,11 @@ export default function Checkout() {
                 ご購入手続き
             </Heading>
 
-            {/* PCでは 2カラム（左: 入力, 右: 金額）、スマホでは縦1列になるレイアウト */}
             <SimpleGrid
                 columns={{ base: 1, lg: 3 }}
                 gap={8}
                 alignItems="flex-start"
             >
-                <Stack
-                    gap="8"
-                    maxW="sm"
-                    css={{ "--field-label-width": "96px" }}
-                >
-                    <Field.Root>
-                        <Field.Label>お名前</Field.Label>
-                        <Input placeholder="田中" />
-                        <Input placeholder="太郎" />
-                    </Field.Root>
-
-                    <Field.Root>
-                        <Field.Label>メールアドレス</Field.Label>
-                        <Input placeholder="me@example.com" />
-                    </Field.Root>
-                    <Field.Root>
-                        <Field.Label>Email</Field.Label>
-                        <Input placeholder="me@example.com" />
-                    </Field.Root>
-                    <Field.Root>
-                        <Field.Label>配送先住所</Field.Label>
-                        <Input placeholder="郵便番号（例: 123-4567）" />
-                        <Input placeholder="都道府県・市区町村（例: 東京都渋谷区神南）" />
-                        <Input placeholder="番地・ビル名・部屋番号" />
-                    </Field.Root>
-                </Stack>
-            </SimpleGrid>
-            <SimpleGrid
-                columns={{ base: 1, lg: 3 }}
-                gap={8}
-                alignItems="flex-start"
-            >
-                {/* 📝 左側カラム（3つ中2つの幅）：お客様情報 ＆ 配送先入力フォーム */}
                 <Box gridColumn={{ lg: "span 2" }}>
                     <Box
                         bg="white"
@@ -85,89 +54,47 @@ export default function Checkout() {
                         borderColor="gray.100"
                         shadow="sm"
                     >
-                        <Stack gap={6}>
-                            {/* 👤 氏名入力エリア */}
-                            <Box>
-                                <Text
-                                    fontSize="xs"
-                                    fontWeight="bold"
-                                    mb={2}
-                                    color="gray.700"
-                                >
+                        <Stack
+                            gap="8"
+                            maxW="sm"
+                            css={{ "--field-label-width": "96px" }}
+                        >
+                            <Field.Root>
+                                <Field.Label fontWeight={"bold"}>
                                     お名前
-                                </Text>
-                                <SimpleGrid columns={2} gap={4}>
-                                    <Input
-                                        placeholder="姓（例: 山田）"
-                                        bg="gray.50"
-                                        variant="subtle"
-                                        h="48px"
-                                    />
-                                    <Input
-                                        placeholder="名（例: 太郎）"
-                                        bg="gray.50"
-                                        variant="subtle"
-                                        h="48px"
-                                    />
-                                </SimpleGrid>
-                            </Box>
+                                </Field.Label>
+                                <Flex gap={4}>
+                                    <Input placeholder="田中" />
+                                    <Input placeholder="太郎" />
+                                </Flex>
+                            </Field.Root>
 
-                            {/* ✉️ メールアドレス入力エリア */}
-                            <Box>
-                                <Text
-                                    fontSize="xs"
-                                    fontWeight="bold"
-                                    mb={2}
-                                    color="gray.700"
-                                >
+                            <Field.Root>
+                                <Field.Label fontWeight={"bold"}>
                                     メールアドレス
-                                </Text>
-                                <Input
-                                    type="email"
-                                    placeholder="example@minimal.com"
-                                    bg="gray.50"
-                                    variant="subtle"
-                                    h="48px"
-                                />
-                            </Box>
-
-                            {/* 📍 配送先入力エリア */}
-                            <Box>
-                                <Text
-                                    fontSize="xs"
-                                    fontWeight="bold"
-                                    mb={2}
-                                    color="gray.700"
-                                >
+                                </Field.Label>
+                                <Input placeholder="me@example.com" />
+                            </Field.Root>
+                            <Field.Root>
+                                <Field.Label fontWeight={"bold"}>
+                                    Email
+                                </Field.Label>
+                                <Input placeholder="me@example.com" />
+                            </Field.Root>
+                            <Field.Root>
+                                <Field.Label fontWeight={"bold"}>
                                     配送先住所
-                                </Text>
-                                <Stack gap={3}>
-                                    <Input
-                                        placeholder="郵便番号（例: 123-4567）"
-                                        maxW="240px"
-                                        bg="gray.50"
-                                        variant="subtle"
-                                        h="48px"
-                                    />
-                                    <Input
-                                        placeholder="都道府県・市区町村（例: 東京都渋谷区神南）"
-                                        bg="gray.50"
-                                        variant="subtle"
-                                        h="48px"
-                                    />
-                                    <Input
-                                        placeholder="番地・ビル名・部屋番号"
-                                        bg="gray.50"
-                                        variant="subtle"
-                                        h="48px"
-                                    />
-                                </Stack>
-                            </Box>
+                                </Field.Label>
+                                <Input
+                                    maxW={"200px"}
+                                    placeholder="郵便番号（例: 123-4567）"
+                                />
+                                <Input placeholder="都道府県・市区町村（例: 東京都渋谷区神南）" />
+                                <Input placeholder="番地・ビル名・部屋番号" />
+                            </Field.Root>
                         </Stack>
                     </Box>
                 </Box>
-
-                {/* 🧾 右側カラム（3つ中1つの幅）：金額表示 ＆ 注文確定ボタン */}
                 <Box
                     bg="white"
                     p={6}
@@ -175,52 +102,52 @@ export default function Checkout() {
                     borderColor="gray.100"
                     shadow="sm"
                 >
-                    <Heading
-                        as="h2"
-                        size="sm"
-                        mb={4}
-                        fontWeight="bold"
-                        color="gray.800"
-                    >
-                        注文内容の確認
-                    </Heading>
-
-                    {/* 金額の明細 */}
-                    <Stack gap={3} mb={6} fontSize="sm" color="gray.600">
-                        <Flex justify="space-between">
-                            <Text>商品小計</Text>
-                            <Text fontWeight="medium" color="gray.900">
-                                ¥{itemTotal.toLocaleString()}
-                            </Text>
-                        </Flex>
-                        <Flex justify="space-between">
-                            <Text>配送料</Text>
-                            <Text color="green.600" fontWeight="medium">
-                                無料
-                            </Text>
-                        </Flex>
-                        <hr style={{ borderColor: "#F3F4F6" }} />
-                        <Flex
-                            justify="space-between"
-                            fontSize="lg"
-                            fontWeight="black"
-                            color="gray.900"
+                    <Box flex={1}>
+                        <Heading
+                            as="h2"
+                            size="sm"
+                            mb={4}
+                            fontWeight="bold"
+                            color="gray.800"
                         >
-                            <Text>最終合計金額</Text>
-                            <Text fontSize="xl">
-                                ¥{finalTotal.toLocaleString()}
-                            </Text>
-                        </Flex>
-                    </Stack>
+                            注文内容の確認
+                        </Heading>
+                        <DataList.Root orientation="horizontal">
+                            <DataList.Item>
+                                <DataList.ItemLabel>
+                                    商品小計
+                                </DataList.ItemLabel>
+                                <DataList.ItemValue>
+                                    ¥{itemTotal.toLocaleString()}
+                                </DataList.ItemValue>
+                            </DataList.Item>
+                            <DataList.Item>
+                                <DataList.ItemLabel>配送料</DataList.ItemLabel>
+                                <DataList.ItemValue color={"green"}>
+                                    無料
+                                </DataList.ItemValue>
+                            </DataList.Item>
+                            <Separator borderColor="gray.200" />
+                            <DataList.Item>
+                                <DataList.ItemLabel
+                                    fontSize={"sm"}
+                                    fontWeight={"bold"}
+                                >
+                                    最終合計金額
+                                </DataList.ItemLabel>
+                                <DataList.ItemValue>
+                                    ¥{finalTotal.toLocaleString()}
+                                </DataList.ItemValue>
+                            </DataList.Item>
+                        </DataList.Root>
+                    </Box>
 
-                    {/* 注文確定ボタン */}
                     <Button
+                        mt={3}
                         colorPalette="black"
                         w="full"
-                        size="lg"
                         fontWeight="bold"
-                        h="56px"
-                        _hover={{ shadow: "md" }}
+                        variant={"solid"}
                         onClick={() =>
                             alert(
                                 "注文が確定しました！ご購入ありがとうございます。（テスト）",

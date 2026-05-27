@@ -7,6 +7,8 @@ import {
     Text,
     Button,
     Stack,
+    DataList,
+    Separator,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import CartCard from "../../components/user/UserCartCard";
@@ -36,6 +38,17 @@ export default function Cart() {
 
     return (
         <Container maxW="6xl" py={12}>
+            <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                color="gray.500"
+                mb={6}
+                _hover={{ bg: "gray.100" }}
+            >
+                <Link to="/home">← カートに戻る</Link>
+            </Button>
+
             <Heading as="h1" size="2xl" mb={8} fontWeight="black">
                 ショッピングカート
             </Heading>
@@ -52,58 +65,70 @@ export default function Cart() {
                         ))}
                     </Stack>
                 </Box>
-
                 <Box
-                    flex="1"
-                    w="full"
                     bg="white"
                     p={6}
                     border="1px solid"
                     borderColor="gray.100"
+                    shadow="sm"
                 >
-                    <Heading as="h2" size="sm" mb={4} fontWeight="bold">
-                        注文内容
-                    </Heading>
-
-                    <Stack gap={3} mb={6} fontSize="sm" color="gray.600">
-                        <Flex justify="space-between">
-                            <Text>商品合計</Text>
-                            <Text>¥{totalPrice.toLocaleString()}</Text>
-                        </Flex>
-                        <Flex justify="space-between">
-                            <Text>送料</Text>
-                            <Text>無料</Text>
-                        </Flex>
-                        <hr style={{ borderColor: "#F3F4F6" }} />
-                        <Flex
-                            justify="space-between"
-                            fontSize="lg"
-                            fontWeight="black"
-                            color="gray.900"
+                    <Box flex={1}>
+                        <Heading
+                            as="h2"
+                            size="sm"
+                            mb={4}
+                            fontWeight="bold"
+                            color="gray.800"
                         >
-                            <Text>合計金額</Text>
-                            <Text>¥{totalPrice.toLocaleString()}</Text>
-                        </Flex>
-                    </Stack>
+                            注文内容の確認
+                        </Heading>
+                        <DataList.Root orientation="horizontal">
+                            <DataList.Item>
+                                <DataList.ItemLabel>
+                                    商品小計
+                                </DataList.ItemLabel>
+                                <DataList.ItemValue>
+                                    ¥{totalPrice.toLocaleString()}
+                                </DataList.ItemValue>
+                            </DataList.Item>
+                            <DataList.Item>
+                                <DataList.ItemLabel>配送料</DataList.ItemLabel>
+                                <DataList.ItemValue color={"green"}>
+                                    無料
+                                </DataList.ItemValue>
+                            </DataList.Item>
+                            <Separator borderColor="gray.200" />
+                            <DataList.Item>
+                                <DataList.ItemLabel
+                                    fontSize={"sm"}
+                                    fontWeight={"bold"}
+                                >
+                                    合計金額
+                                </DataList.ItemLabel>
+                                <DataList.ItemValue>
+                                    ¥{totalPrice.toLocaleString()}
+                                </DataList.ItemValue>
+                            </DataList.Item>
+                        </DataList.Root>
+                    </Box>
 
-                    {/* 購入手続きボタン */}
                     <Button
+                        mt={3}
                         colorPalette="black"
                         w="full"
-                        size="lg"
                         fontWeight="bold"
+                        variant={"solid"}
                         asChild
                     >
                         <Link to="/checkout">購入手続きへ進む</Link>
                     </Button>
-
                     <Button
-                        asChild
-                        variant="ghost"
-                        w="full"
                         mt={3}
-                        size="sm"
-                        color="gray.500"
+                        colorPalette="black"
+                        w="full"
+                        fontWeight="bold"
+                        variant={"ghost"}
+                        asChild
                     >
                         <Link to="/home">買い物を続ける</Link>
                     </Button>
