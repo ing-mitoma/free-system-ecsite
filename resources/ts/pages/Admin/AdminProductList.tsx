@@ -33,6 +33,13 @@ export default function AdminProductList() {
     const [products, setProducts] = useState<Product[]>([]);
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [formData, setFormData] = useState({
+        name: "",
+        price: "",
+        category: "",
+        emoji: "",
+        description: "",
+    });
 
     // 🔄 1. 商品一覧をAPIから取得
     useEffect(() => {
@@ -108,12 +115,13 @@ export default function AdminProductList() {
                                 <Dialog.Body>
                                     <Stack gap={4} my={4}>
                                         <Field.Root>
+                                            <Field.Label>商品名</Field.Label>
                                             <Input
-                                                placeholder="フレッドペリー"
-                                                value={editingProduct.name}
+                                                placeholder="商品名"
+                                                value={formData.name}
                                                 onChange={(e) =>
-                                                    seteditingProduct({
-                                                        ...editingProduct,
+                                                    setFormData({
+                                                        ...formData,
                                                         name: e.target.value,
                                                     })
                                                 }
@@ -121,13 +129,14 @@ export default function AdminProductList() {
                                             />
                                         </Field.Root>
                                         <Field.Root>
+                                            <Field.Label>価格</Field.Label>
                                             <Input
                                                 type="price"
                                                 placeholder="1000"
-                                                value={products.price}
+                                                value={formData.price}
                                                 onChange={(e) =>
-                                                    setProducts({
-                                                        ...products,
+                                                    setFormData({
+                                                        ...formData,
                                                         price: e.target.value,
                                                     })
                                                 }
@@ -135,13 +144,16 @@ export default function AdminProductList() {
                                             />
                                         </Field.Root>
                                         <Field.Root>
+                                            <Field.Label>
+                                                カテゴリー
+                                            </Field.Label>
                                             <select
-                                                value={products.category}
+                                                value={formData.category}
                                                 onChange={(e) =>
-                                                    setproducts({
-                                                        ...products,
-                                                        category: e.target
-                                                            .value as any,
+                                                    setFormData({
+                                                        ...formData,
+                                                        category:
+                                                            e.target.value,
                                                     })
                                                 }
                                                 style={{
@@ -182,11 +194,12 @@ export default function AdminProductList() {
                                         <Field.Root>
                                             <Field.Label>商品説明</Field.Label>
                                             <Textarea
-                                                value={products.description}
+                                                value={formData.description}
                                                 onChange={(e) =>
-                                                    setProducts({
-                                                        ...products,
-                                                        price: e.target.value,
+                                                    setFormData({
+                                                        ...formData,
+                                                        description:
+                                                            e.target.value,
                                                     })
                                                 }
                                                 required
@@ -220,7 +233,7 @@ export default function AdminProductList() {
                     <Table.Header>
                         <Table.Row>
                             <Table.ColumnHeader>商品名</Table.ColumnHeader>
-                            <Table.ColumnHeader>価格</Table.ColumnHeader>
+                            <Table.ColumnHeader>価格（円）</Table.ColumnHeader>
                             <Table.ColumnHeader>カテゴリー</Table.ColumnHeader>
                             <Table.ColumnHeader>画像</Table.ColumnHeader>
                             <Table.ColumnHeader>操作</Table.ColumnHeader>

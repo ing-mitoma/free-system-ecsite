@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/admin/CreateSidebar";
-import CardHome from "../../components/admin/HomeCard";
+import CardHome from "../../components/admin/AdminHomeCard";
 
 export default function AdminDashboard() {
     const navigate = useNavigate();
