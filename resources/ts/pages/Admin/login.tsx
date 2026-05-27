@@ -22,7 +22,7 @@ export default function AdminLogin() {
             // ブラウザの記憶（localStorage）に「ログイン中！」のスタンプを押す
             localStorage.setItem("admin_logged_in", "true");
             // 管理画面のトップへ進む
-            navigate("/admin");
+            navigate("/admin/home");
         } else {
             alert(
                 "メールアドレスまたはパスワードが違います。\n(テスト用: admin@minimal.com / password)",
