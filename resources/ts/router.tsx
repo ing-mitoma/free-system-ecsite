@@ -7,9 +7,9 @@ import Product from "./pages/Shop/Product";
 import Checkout from "./pages/Shop/Checkout";
 import AdminLogin from "./pages/Admin/login";
 import AdminAuthGuard from "./components/admin/AdminAuthGuard";
-import AdminDashboard from "./pages/Admin/Dashboard";
+import AdminDashboard from "./pages/Admin/AdminHome";
 import AdminProductList from "./pages/Admin/AdminProductList";
-import AdminUserList from "./pages/Admin/UserList";
+import AdminUserList from "./pages/Admin/AdminUserList";
 
 export const router = createBrowserRouter([
     {
@@ -53,7 +53,7 @@ export const router = createBrowserRouter([
         element: <AdminLogin />,
     },
     {
-        path: "/admin",
+        path: "/admin/home",
         element: (
             <AdminAuthGuard>
                 <AdminDashboard />
