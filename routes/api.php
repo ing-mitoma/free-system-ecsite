@@ -1,7 +1,12 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+Route::apiResource('products', ProductController::class);
+Route::apiResource('admins', AdminController::class);
 
 // 🛒 フロントエンドのReactが商品一覧を取得するためのAPIURL
 // Route::get('/products', function () {
@@ -87,16 +92,16 @@ use Illuminate\Support\Facades\Route;
 //     ['id' => 34, 'name' => 'スターリングシルバー ミニマルリング', 'price' => 12000, 'category' => 'アクセサリー', 'emoji' => '💍', 'is_new' => false],
 // ];
 
-    // 配列の中からIDが一致するものを検索
-    $product = collect($products)->firstWhere('id', (int)$id);
+//     // 配列の中からIDが一致するものを検索
+//     $product = collect($products)->firstWhere('id', (int)$id);
 
-    // もし見つからなければ404エラーを返す
-    if (!$product) {
-        return response()->json(['message' => 'Product not found'], 404);
-    }
-    if (!isset($product['description'])) {
-        $product['description'] = "【APIから取得】ミニマルなデザインと機能性を両立した「{$product['name']}」。洗練されたライフスタイルに寄り添う、当ショップ厳選のクオリティをお楽しみください。";
-    }
+//     // もし見つからなければ404エラーを返す
+//     if (!$product) {
+//         return response()->json(['message' => 'Product not found'], 404);
+//     }
+//     if (!isset($product['description'])) {
+//         $product['description'] = "【APIから取得】ミニマルなデザインと機能性を両立した「{$product['name']}」。洗練されたライフスタイルに寄り添う、当ショップ厳選のクオリティをお楽しみください。";
+//     }
 
-    return response()->json($product);
-});
+//     return response()->json($product);
+// });

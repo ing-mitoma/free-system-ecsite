@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Box,
     Flex,
@@ -19,7 +19,7 @@ import {
 import AdminOtherLayout from "../../layouts/AdminOtherLayout";
 
 // 管理者データの型定義
-interface AdminUser {
+interface Admin {
     id: number;
     name: string;
     email: string;
@@ -27,41 +27,37 @@ interface AdminUser {
 }
 
 export default function AdminUserList() {
-    // 💡 管理者一覧のデータ状態（初期のダミーデータ）
-    const [users, setUsers] = useState<AdminUser[]>([
-        { id: 1, name: "田中花子", email: "test@gmail.jp", role: "管理者" },
-        {
-            id: 2,
-            name: "山田 太郎",
-            email: "yamada@gmail.jp",
-            role: "一般スタッフ",
-        },
-    ]);
+    const [users, setUsers] = useState<Admin[]>([]);
+    useEffect(() => {
+        fetch("/api/admins")
+            .then((res) => res.json())
+            .then((data) => {
+                setUsers(data);
+            })
+            .catch((error) => console.log("データの取得失敗", error));
+    }, []);
+    console.log(users);
 
-    // 💡 モーダルの開閉と、フォームの入力状態
     const [isOpen, setIsOpen] = useState(false);
-    const [editingUser, setEditingUser] = useState<AdminUser | null>(null); // nullなら「新規追加」、データがあれば「編集」
+    const [editingUser, setEditingUser] = useState<Admin | null>(null);
     const [formData, setFormData] = useState({
         name: "",
         email: "",
         role: "一般スタッフ" as "管理者" | "一般スタッフ",
     });
 
-    // 「新規追加」ボタンを押したとき
     const handleCreateOpen = () => {
         setEditingUser(null);
         setFormData({ name: "", email: "", role: "一般スタッフ" });
         setIsOpen(true);
     };
 
-    // 「編集」ボタンを押したとき
-    const handleEditOpen = (user: AdminUser) => {
+    const handleEditOpen = (user: Admin) => {
         setEditingUser(user);
         setFormData({ name: user.name, email: user.email, role: user.role });
         setIsOpen(true);
     };
 
-    // フォームの保存（追加 or 更新）ボタンを押したとき
     const handleSave = (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -83,8 +79,12 @@ export default function AdminUserList() {
 
     // 「削除」ボタンを押したとき
     const handleDelete = (id: number) => {
-        if (confirm("本当にこの管理者を削除しますか？")) {
-            setUsers(users.filter((u) => u.id !== id));
+        if (window.confirm("本当にこの商品を削除しますか？")) {
+            fetch(`/api/admins/${id}`, {
+                method: "DELETE",
+            }).then(() => {
+                setUsers(users.filter((users) => users.id !== id));
+            });
         }
     };
 
@@ -205,6 +205,7 @@ export default function AdminUserList() {
                 <Table.Root size="sm">
                     <Table.Header>
                         <Table.Row>
+                            <Table.ColumnHeader>管理ID</Table.ColumnHeader>
                             <Table.ColumnHeader>氏名</Table.ColumnHeader>
                             <Table.ColumnHeader>
                                 メールアドレス
@@ -214,17 +215,21 @@ export default function AdminUserList() {
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
-                        {users.map((item) => (
-                            <Table.Row key={item.id}>
-                                <Table.Cell>{item.name}</Table.Cell>
-                                <Table.Cell>{item.email}</Table.Cell>
-                                <Table.Cell>{item.role}</Table.Cell>
+                        {users.map((user) => (
+                            <Table.Row key={user.id}>
+                                <Table.Cell>{user.id}</Table.Cell>
+                                <Table.Cell>{user.name}</Table.Cell>
+                                <Table.Cell>{user.email}</Table.Cell>
+                                <Table.Cell>{user.role}</Table.Cell>
                                 <Table.Cell textAlign="end">
                                     <HStack>
                                         <Button variant="outline">編集</Button>
                                         <Button
                                             colorPalette="red"
                                             variant="outline"
+                                            onClick={() =>
+                                                handleDelete(user.id)
+                                            }
                                         >
                                             削除
                                         </Button>

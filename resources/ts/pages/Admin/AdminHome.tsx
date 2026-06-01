@@ -1,15 +1,5 @@
 import React from "react";
-import {
-    Box,
-    Flex,
-    Heading,
-    Text,
-    Stack,
-    SimpleGrid,
-    Button,
-    HStack,
-    Card,
-} from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, SimpleGrid } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/admin/CreateSidebar";
 import CardHome from "../../components/admin/AdminHomeCard";
@@ -20,9 +10,7 @@ export default function AdminDashboard() {
     return (
         <Flex h="100vh" bg="gray.50" overflow="hidden">
             <Sidebar onLogout={() => navigate("/admin/login")} />
-            {/* 📝 右側：メインコンテンツ表示エリア */}
             <Box flex="1" p={{ base: 6, md: 10 }} overflowY="auto">
-                {/* ヘッダー部分 */}
                 <Flex justify="space-between" align="center" mb={10}>
                     <Box>
                         <Heading as="h1" size="xl" fontWeight="black" mb={1}>
