@@ -1,16 +1,5 @@
-import {
-    Box,
-    Flex,
-    Heading,
-    Text,
-    Stack,
-    SimpleGrid,
-    Button,
-    HStack,
-    Card,
-    VStack,
-} from "@chakra-ui/react";
-import { Link, useNavigate } from "react-router-dom";
+import { Box, Heading, Button, VStack } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import SidebarButton from "./SiderbarButton";
 
 interface SidebarProps {

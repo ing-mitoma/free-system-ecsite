@@ -14,8 +14,7 @@ return new class extends Migration
             $table->unsignedInteger('price');             
             $table->integer('stock')->default(0);    
             $table->string('category', 100);                 
-            $table->string('emoji', 50)->nullable();   
-            $table->boolean('is_new')->default(false);   
+            $table->string('emoji', 50)->nullable();           
             $table->text('description')->nullable();        
             $table->timestamps();                         
             
