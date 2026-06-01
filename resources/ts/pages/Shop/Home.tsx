@@ -24,27 +24,19 @@ interface Product {
 }
 
 const Home = () => {
-    // 📥 1. APIから届く商品データを格納する空箱（State）
     const [products, setProducts] = useState<Product[]>([]);
-    // ⏳ 2. 読み込み中（ローディング）の状態を管理
     const [loading, setLoading] = useState<boolean>(true);
 
-    // 🔄 3. 画面が立ち上がった瞬間に、自動でLaravelのAPIを叩きに行く
     useEffect(() => {
-        fetch("/api/products") // Laravel側のルートを呼び出す
-            .then((response) => {
-                if (!response.ok) throw new Error("データの取得に失敗しました");
-                return response.json();
-            })
-            .then((data: Product[]) => {
-                setProducts(data); // 💡 届いたデータをReactの箱にセット！
-                setLoading(false); // ローディングを終了
-            })
-            .catch((error) => {
-                console.error(error);
+        fetch("/api/products")
+            .then((res) => res.json())
+            .then((data) => {
+                setProducts(data);
                 setLoading(false);
-            });
-    }, []); // 空の配列 [] は「最初の1回だけ実行する」という意味
+            })
+            .catch((error) => console.log("データの取得失敗", error));
+        setLoading(true);
+    }, []);
 
     if (loading) {
         return (
@@ -62,7 +54,7 @@ const Home = () => {
             <Container maxW="6xl" mt={12}>
                 <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={8}>
                     {products.map((product) => (
-                        <HomeCard product={product} />
+                        <HomeCard key={product.id} product={product} />
                     ))}
                 </SimpleGrid>
 

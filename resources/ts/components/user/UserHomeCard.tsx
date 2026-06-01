@@ -33,12 +33,8 @@ export default function HomeCard({ product }: HomeCardProps) {
                     {product.emoji}
                 </Box>
                 <Card.Body gap="2">
-                    <Text fontSize={"xs"} fontWeight={"bold"}>
-                        {product.category}
-                    </Text>
-                    <Card.Title as={"h3"} fontWeight={"bold"} fontSize={"sm"}>
-                        {product.name}
-                    </Card.Title>
+                    <Text>{product.category}</Text>
+                    <Card.Title>{product.name}</Card.Title>
                     <Text
                         fontSize="lg"
                         fontWeight="black"

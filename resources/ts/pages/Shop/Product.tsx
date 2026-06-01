@@ -21,37 +21,26 @@ interface ProductType {
     price: number;
     category: string;
     emoji: string;
-    is_new: boolean;
     description: string;
 }
 
 export default function Product() {
     const { id } = useParams<{ id: string }>();
 
-    // 📥 APIから取得した1件の商品データを管理する箱（最初は null）
     const [product, setProduct] = useState<ProductType | null>(null);
-    // ⏳ 読み込み中の状態を管理
     const [loading, setLoading] = useState<boolean>(true);
 
-    // 🔄 画面が開いたとき、およびURLのIDが変わったときに実行
     useEffect(() => {
-        setLoading(true);
-        fetch(`/api/products/${id}`) // 💡 LaravelのID個別指定APIを叩く
-            .then((response) => {
-                if (!response.ok) throw new Error("商品の取得に失敗しました");
-                return response.json();
-            })
-            .then((data: ProductType) => {
-                setProduct(data); // 💡 届いたデータをセット
-                setLoading(false); // ローディング終了
-            })
-            .catch((error) => {
-                console.error(error);
+        fetch(`/api/products/${id}`)
+            .then((res) => res.json())
+            .then((data) => {
+                setProduct(data);
                 setLoading(false);
-            });
-    }, [id]); // id が変わったら再読み込みする設定
+            })
+            .catch((error) => console.log("データの取得失敗", error));
+        setLoading(true);
+    }, []);
 
-    // ⏳ ロード中のぐるぐる表示
     if (loading) {
         return (
             <Center minH="100vh" flexDirection="column" gap={4}>
@@ -68,7 +57,6 @@ export default function Product() {
         );
     }
 
-    // 🚨 エラー安全対策（データが取れなかった場合）
     if (!product) {
         return (
             <Container maxW="xl" py={20} textAlign="center">
@@ -100,7 +88,6 @@ export default function Product() {
                 gap={{ base: 8, md: 12 }}
                 alignItems="flex-start"
             >
-                {/* 左側：商品画像エリア */}
                 <Box
                     bg="white"
                     border="1px solid"
@@ -115,7 +102,6 @@ export default function Product() {
                     {product.emoji}
                 </Box>
 
-                {/* 右側：商品情報エリア */}
                 <Stack gap={6}>
                     <HStack justify="space-between" align="center">
                         <Text
