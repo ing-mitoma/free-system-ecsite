@@ -14,7 +14,7 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i=0; $i < 100; $i++) { 
+        for ($i=0; $i < 3; $i++) { 
             DB::table('products')->insert([
             'name'       => 'aaabbb',
             'price'      => '123123',
@@ -26,6 +26,5 @@ class ProductSeeder extends Seeder
             'updated_at' => now(),
         ]);
         }
-        
     }
 }

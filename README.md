@@ -56,3 +56,30 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## ファイル管理
+
+resources/ts/
+├── main.tsx main画面
+├── router.tsx urlの管理
+│
+├── layouts/  
+│ ├── ShopLayout.tsx # 一般画面用（ヘッダー・フッター付き）
+│ └── AdminLayout.tsx # 管理画面用（左側にサイドバー付き）
+│
+├── pages/ # 📄 各画面の「メインコンテンツ」を入れるフォルダ
+│ ├── Shop/ # 🛒 一般ユーザー向け画面
+│ │ ├── Home.tsx # トップページ（商品が並ぶ）＜アウトプット用＞
+│ │ ├── Product.tsx # 商品詳細ページ（「カートに入れる」がある）
+│ │ └── Cart.tsx # カート画面（購入手続きへ進む）
+│ └── Admin/ # 📊 管理者向け画面
+│ ├──
+│ └── Products.tsx # 商品管理（新規登録フォームなど）
+│
+└── components/ コンポーネントの管理
+├── user
+├── Footer.tsx user画面用のフッター
+└── Header.tsx user画面用のヘッダー
+├──admin
+└── Sidebar.tsx 管理画面用のサイドバーコンポーネント
+└── AdminAuthGuard.tsx　管理画面のログイン監視用コンポーネント
