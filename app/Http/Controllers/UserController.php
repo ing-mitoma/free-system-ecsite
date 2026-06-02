@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class AdminController extends Controller
+class UserController extends Controller
 {
   /**
    * Display a listing of the resource.
    */
   public function index()
   {
-    $admins = Admin::all();
-    return response()->json($admins);
+    $users = User::all();
+    return response()->json($users);
   }
 
   /**
@@ -61,8 +61,8 @@ class AdminController extends Controller
    */
   public function destroy(string $id)
   {
-    $adminUser = Admin::find($id);
-    $adminUser->delete();
+    $user = User::find($id);
+    $user->delete();
     return response()->json(null, 204);
   }
 }

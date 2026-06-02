@@ -6,9 +6,6 @@ import {
   Heading,
   Text,
   SimpleGrid,
-  Button,
-  Flex,
-  Badge,
   Spinner,
   Center,
 } from "@chakra-ui/react";

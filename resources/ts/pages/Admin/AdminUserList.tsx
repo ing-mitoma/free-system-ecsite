@@ -2,23 +2,18 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Flex,
-  Heading,
-  Text,
   Table,
-  Badge,
   Button,
   Input,
   Field,
   Dialog,
   Stack,
   HStack,
-  IconButton,
   Portal,
   CloseButton,
 } from "@chakra-ui/react";
 import AdminOtherLayout from "../../layouts/AdminOtherLayout";
 
-// 管理者データの型定義
 interface Admin {
   id: number;
   name: string;
@@ -29,14 +24,13 @@ interface Admin {
 export default function AdminUserList() {
   const [users, setUsers] = useState<Admin[]>([]);
   useEffect(() => {
-    fetch("/api/admins")
+    fetch("/api/users")
       .then((res) => res.json())
       .then((data) => {
         setUsers(data);
       })
       .catch((error) => console.log("データの取得失敗", error));
   }, []);
-  console.log(users);
 
   const [isOpen, setIsOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<Admin | null>(null);
@@ -62,12 +56,10 @@ export default function AdminUserList() {
     e.preventDefault();
 
     if (editingUser) {
-      // 🔄 編集（更新）のロジック
       setUsers(
         users.map((u) => (u.id === editingUser.id ? { ...u, ...formData } : u))
       );
     } else {
-      // ✨ 新規追加のロジック
       const newId =
         users.length > 0 ? Math.max(...users.map((u) => u.id)) + 1 : 1;
       setUsers([...users, { id: newId, ...formData }]);
@@ -75,10 +67,9 @@ export default function AdminUserList() {
     setIsOpen(false);
   };
 
-  // 「削除」ボタンを押したとき
   const handleDelete = (id: number) => {
     if (window.confirm("本当にこの商品を削除しますか？")) {
-      fetch(`/api/admins/${id}`, {
+      fetch(`/api/users/${id}`, {
         method: "DELETE",
       }).then(() => {
         setUsers(users.filter((users) => users.id !== id));
@@ -108,7 +99,7 @@ export default function AdminUserList() {
               <Dialog.Content>
                 <Dialog.Header>
                   <Dialog.Title fontWeight="black" fontSize="xl">
-                    {editingUser ? "管理者情報の編集" : "新しい管理者の追加"}
+                    管理者情報の作成
                   </Dialog.Title>
                   <Dialog.CloseTrigger>
                     <CloseButton size="sm" />
@@ -188,7 +179,6 @@ export default function AdminUserList() {
               <Table.ColumnHeader>管理ID</Table.ColumnHeader>
               <Table.ColumnHeader>氏名</Table.ColumnHeader>
               <Table.ColumnHeader>メールアドレス</Table.ColumnHeader>
-              <Table.ColumnHeader>役職</Table.ColumnHeader>
               <Table.ColumnHeader>操作</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
@@ -198,7 +188,6 @@ export default function AdminUserList() {
                 <Table.Cell>{user.id}</Table.Cell>
                 <Table.Cell>{user.name}</Table.Cell>
                 <Table.Cell>{user.email}</Table.Cell>
-                <Table.Cell>{user.role}</Table.Cell>
                 <Table.Cell textAlign="end">
                   <HStack>
                     <Button variant="outline">編集</Button>
