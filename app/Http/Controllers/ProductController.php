@@ -24,8 +24,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         // validationの作成をする。
-        $validated = $request;
-        $product = Product::create($validated);
+        $product = Product::create($request->all());
         return response()->json($product, 201);
     }
 
@@ -43,7 +42,9 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $product = Product::find($id);
+        $product->update($request->all());
+        return response()->json($product);
     }
 
     /**
