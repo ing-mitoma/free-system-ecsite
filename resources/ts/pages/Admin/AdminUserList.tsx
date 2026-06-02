@@ -1,20 +1,10 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Flex,
-  Table,
-  Button,
-  Input,
-  Field,
-  Dialog,
-  Stack,
-  HStack,
-  Portal,
-  CloseButton,
-} from "@chakra-ui/react";
+import { Box, Flex, Table, Button, HStack } from "@chakra-ui/react";
 import AdminOtherLayout from "../../layouts/AdminOtherLayout";
+import UserAddDialog from "../../components/admin/UserAddDialog";
+import UserEditDialog from "../../components/admin/UserEditDialog";
 
-interface Admin {
+interface User {
   id: number;
   name: string;
   email: string;
@@ -22,49 +12,27 @@ interface Admin {
 }
 
 export default function AdminUserList() {
-  const [users, setUsers] = useState<Admin[]>([]);
-  useEffect(() => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+
+  const fetchUsers = () => {
     fetch("/api/users")
       .then((res) => res.json())
       .then((data) => {
         setUsers(data);
       })
       .catch((error) => console.log("データの取得失敗", error));
+  };
+
+  useEffect(() => {
+    fetchUsers();
   }, []);
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [editingUser, setEditingUser] = useState<Admin | null>(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    role: "一般スタッフ" as "管理者" | "一般スタッフ",
-  });
-
-  const handleCreateOpen = () => {
-    setEditingUser(null);
-    setFormData({ name: "", email: "", role: "一般スタッフ" });
-    setIsOpen(true);
-  };
-
-  const handleEditOpen = (user: Admin) => {
+  const openEditDialog = (user: User) => {
     setEditingUser(user);
-    setFormData({ name: user.name, email: user.email, role: user.role });
-    setIsOpen(true);
-  };
-
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (editingUser) {
-      setUsers(
-        users.map((u) => (u.id === editingUser.id ? { ...u, ...formData } : u))
-      );
-    } else {
-      const newId =
-        users.length > 0 ? Math.max(...users.map((u) => u.id)) + 1 : 1;
-      setUsers([...users, { id: newId, ...formData }]);
-    }
-    setIsOpen(false);
+    setIsEditDialogOpen(true);
   };
 
   const handleDelete = (id: number) => {
@@ -83,87 +51,17 @@ export default function AdminUserList() {
       description="システムにアクセス可能な管理者アカウントの一覧・編集が行えます。"
     >
       <Flex justify="flex-end" w="100%">
-        <Dialog.Root
-          size="lg"
-          placement="center"
-          motionPreset="slide-in-bottom"
-        >
-          <Dialog.Trigger asChild>
-            <Button colorPalette="black" size="sm" fontWeight={"bold"}>
-              + 新規作成
-            </Button>
-          </Dialog.Trigger>
-          <Portal>
-            <Dialog.Backdrop />
-            <Dialog.Positioner>
-              <Dialog.Content>
-                <Dialog.Header>
-                  <Dialog.Title fontWeight="black" fontSize="xl">
-                    管理者情報の作成
-                  </Dialog.Title>
-                  <Dialog.CloseTrigger>
-                    <CloseButton size="sm" />
-                  </Dialog.CloseTrigger>
-                </Dialog.Header>
-                <Dialog.Body>
-                  <Stack gap={4} my={4}>
-                    <Field.Root>
-                      <Input
-                        placeholder="例：山田 太郎"
-                        value={formData.name}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            name: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </Field.Root>
-                    <Field.Root>
-                      <Input
-                        type="email"
-                        placeholder="example@in-g.jp"
-                        value={formData.email}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            email: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </Field.Root>
-                    <Field.Root>
-                      <select
-                        value={formData.role}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            role: e.target.value as any,
-                          })
-                        }
-                        style={{
-                          width: "100%",
-                          padding: "8px",
-                          border: "1px solid #E2E8F0",
-                        }}
-                      >
-                        <option value="一般スタッフ">一般スタッフ</option>
-                        <option value="管理者">管理者</option>
-                      </select>
-                    </Field.Root>
-                  </Stack>
-                </Dialog.Body>
-                <Dialog.Footer>
-                  <Button type="submit" colorPalette="black" fontWeight="bold">
-                    保存する
-                  </Button>
-                </Dialog.Footer>
-              </Dialog.Content>
-            </Dialog.Positioner>
-          </Portal>
-        </Dialog.Root>
+        <UserAddDialog
+          isAddDialogOpen={isAddDialogOpen}
+          setIsAddDialogOpen={setIsAddDialogOpen}
+          fetchUsers={fetchUsers}
+        />
+        <UserEditDialog
+          isAddDialogOpen={isAddDialogOpen}
+          setIsAddDialogOpen={setIsAddDialogOpen}
+          editingUser={editingUser}
+          fetchUsers={fetchUsers}
+        />
       </Flex>
       <Box
         bg="white"
@@ -190,7 +88,13 @@ export default function AdminUserList() {
                 <Table.Cell>{user.email}</Table.Cell>
                 <Table.Cell textAlign="end">
                   <HStack>
-                    <Button variant="outline">編集</Button>
+                    <Button
+                      colorPalette="black"
+                      variant="outline"
+                      onClick={() => openEditDialog(user)}
+                    >
+                      編集
+                    </Button>
                     <Button
                       colorPalette="red"
                       variant="outline"
