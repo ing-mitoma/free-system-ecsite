@@ -12,68 +12,68 @@ import AdminProductList from "./pages/Admin/AdminProductList";
 import AdminUserList from "./pages/Admin/AdminUserList";
 
 export const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Button colorPalette="teal">Hello React Router</Button>,
-    },
-    {
-        path: "/home",
-        element: (
-            <ShopLayout>
-                <Home />
-            </ShopLayout>
-        ),
-    },
-    {
-        path: "/cart",
-        element: (
-            <ShopLayout>
-                <Cart />
-            </ShopLayout>
-        ),
-    },
-    {
-        path: "/product/:id",
-        element: (
-            <ShopLayout>
-                <Product />
-            </ShopLayout>
-        ),
-    },
-    {
-        path: "/checkout", // 💡 追加：購入画面のURLを設定
-        element: (
-            <ShopLayout>
-                <Checkout />
-            </ShopLayout>
-        ),
-    },
-    {
-        path: "/admin/login",
-        element: <AdminLogin />,
-    },
-    {
-        path: "/admin/home",
-        element: (
-            <AdminAuthGuard>
-                <AdminDashboard />
-            </AdminAuthGuard>
-        ),
-    },
-    {
-        path: "/admin/products",
-        element: (
-            <AdminAuthGuard>
-                <AdminProductList />
-            </AdminAuthGuard>
-        ),
-    },
-    {
-        path: "/admin/users", // 💡 追加
-        element: (
-            <AdminAuthGuard>
-                <AdminUserList />
-            </AdminAuthGuard>
-        ),
-    },
+  {
+    path: "/",
+    element: <Button colorPalette="teal">Hello React Router</Button>,
+  },
+  {
+    path: "/home",
+    element: (
+      <ShopLayout>
+        <Home />
+      </ShopLayout>
+    ),
+  },
+  {
+    path: "/cart",
+    element: (
+      <ShopLayout>
+        <Cart />
+      </ShopLayout>
+    ),
+  },
+  {
+    path: "/product/:id",
+    element: (
+      <ShopLayout>
+        <Product />
+      </ShopLayout>
+    ),
+  },
+  {
+    path: "/checkout", // 💡 追加：購入画面のURLを設定
+    element: (
+      <ShopLayout>
+        <Checkout />
+      </ShopLayout>
+    ),
+  },
+  {
+    path: "/admin/login",
+    element: <AdminLogin />,
+  },
+  {
+    path: "/admin/home",
+    element: (
+      <AdminAuthGuard>
+        <AdminDashboard />
+      </AdminAuthGuard>
+    ),
+  },
+  {
+    path: "/admin/products",
+    element: (
+      <AdminAuthGuard>
+        <AdminProductList />
+      </AdminAuthGuard>
+    ),
+  },
+  {
+    path: "/admin/users", // 💡 追加
+    element: (
+      <AdminAuthGuard>
+        <AdminUserList />
+      </AdminAuthGuard>
+    ),
+  },
 ]);

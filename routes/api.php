@@ -5,8 +5,8 @@ use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::apiResource('products', ProductController::class);
-Route::apiResource('admins', AdminController::class);
+Route::apiResource("products", ProductController::class);
+Route::apiResource("admins", AdminController::class);
 
 // 🛒 フロントエンドのReactが商品一覧を取得するためのAPIURL
 // Route::get('/products', function () {
@@ -44,7 +44,7 @@ Route::apiResource('admins', AdminController::class);
 //         ['id' => 31, 'name' => 'ポータブル 超薄型メカニカルキーボード', 'price' => 18500, 'category' => 'ガジェット', 'emoji' => '⌨️', 'is_new' => true],
 //         ['id' => 32, 'name' => 'ヴィンテージツイル キャップ', 'price' => 4500, 'category' => 'アクセサリー', 'emoji' => '👒', 'is_new' => false],
 //         ['id' => 33, 'name' => 'コンフォート サンダル（EVA）', 'price' => 5800, 'category' => 'シューズ', 'emoji' => '🩴', 'is_new' => true],
-//         ['id' => 34, 'name' => 'スターリングシルバー ミニマルリング', 'price' => 12000, 'category' => 'アクセサリー', 'emoji' => '💍', 'is_new' => false],  
+//         ['id' => 34, 'name' => 'スターリングシルバー ミニマルリング', 'price' => 12000, 'category' => 'アクセサリー', 'emoji' => '💍', 'is_new' => false],
 //     ];
 
 //     return response()->json($products);
