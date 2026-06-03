@@ -180,6 +180,21 @@ export default function ProductEditDialog({
                     </select>
                   </Field.Root>
                   <Field.Root>
+                    <Field.Label>画像</Field.Label>
+                    <Input
+                      type="emoji"
+                      placeholder=""
+                      value={formData.emoji}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          emoji: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                  </Field.Root>
+                  <Field.Root>
                     <Field.Label>商品説明</Field.Label>
                     <Textarea
                       value={formData.description}

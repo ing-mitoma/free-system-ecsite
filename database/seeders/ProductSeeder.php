@@ -16,12 +16,12 @@ class ProductSeeder extends Seeder
     {
         for ($i=0; $i < 100; $i++) {
             DB::table('products')->insert([
-            'name'       => 'aaabbb',
-            'price'      => '123123',
+            'name'       => 'ヘンリーネックTシャツ',
+            'price'      => "{$i}0000",
             'stock'  => '123',
             'category' => 'アパレル',
-            'emoji' => 'aaaa',
-            'description' => 'ccccccccc',
+            'emoji' => '🧥',
+            'description' => '優れた吸汗力と通気性を持つ生地を使用した商品です。',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

@@ -23,12 +23,14 @@ export default function UserAddDialog({
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    password: "",
   });
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
     const submitData = {
       name: formData.name,
       email: formData.email,
+      password: formData.password,
     };
     fetch("/api/users", {
       method: "POST",
@@ -45,6 +47,7 @@ export default function UserAddDialog({
           setFormData({
             name: "",
             email: "",
+            password: "",
           });
         } else {
           throw new Error("登録失敗");
@@ -84,6 +87,7 @@ export default function UserAddDialog({
               <Dialog.Body>
                 <Stack gap={4} my={4}>
                   <Field.Root>
+                    <Field.Label>管理者名</Field.Label>
                     <Input
                       placeholder="例：山田 太郎"
                       value={formData.name}
@@ -97,6 +101,7 @@ export default function UserAddDialog({
                     />
                   </Field.Root>
                   <Field.Root>
+                    <Field.Label>メールアドレス</Field.Label>
                     <Input
                       type="email"
                       placeholder="example@in-g.jp"
@@ -105,6 +110,20 @@ export default function UserAddDialog({
                         setFormData({
                           ...formData,
                           email: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                  </Field.Root>
+                  <Field.Root>
+                    <Field.Label>パスワード</Field.Label>
+                    <Input
+                      type="password"
+                      value={formData.password}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          password: e.target.value,
                         })
                       }
                       required

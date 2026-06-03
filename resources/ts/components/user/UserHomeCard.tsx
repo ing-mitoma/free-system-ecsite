@@ -13,7 +13,6 @@ export interface Product {
   price: number;
   category: string;
   emoji: string;
-  is_new: boolean;
 }
 interface HomeCardProps {
   product: Product;
@@ -43,7 +42,7 @@ export default function HomeCard({ product }: HomeCardProps) {
           <Button variant="solid" w="full" fontWeight={"bold"} asChild>
             <LinkOverlay asChild>
               <LinkOverlay asChild>
-                <Link to={`/product/${product.id}`}>カートに入れる</Link>
+                <Link to={`/product/${product.id}`}>商品の詳細へ</Link>
               </LinkOverlay>
             </LinkOverlay>
           </Button>

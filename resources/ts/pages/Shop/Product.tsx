@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   Box,
   Container,
   Heading,
-  Flex,
   Text,
   Button,
   Stack,
-  Badge,
   HStack,
   SimpleGrid,
   Spinner,
   Center,
 } from "@chakra-ui/react";
+import { Toaster, toaster } from "../../../../src/components/ui/toaster";
 
 interface ProductType {
   id: number;
@@ -64,6 +63,26 @@ export default function Product() {
       </Container>
     );
   }
+
+  const handleAddToCart = (product: ProductType) => {
+    const currentCartData = localStorage.getItem("cart") || "[]";
+    const cartItems = JSON.parse(currentCartData);
+
+    const existItemIndex = cartItems.findIndex(
+      (item: any) => item.product_id === product.id
+    );
+    if (existItemIndex > -1) {
+      cartItems[existItemIndex].quantity++;
+    } else {
+      cartItems.push({
+        product_id: product.id,
+        quantity: 1,
+      });
+    }
+
+    const updatedCartData = JSON.stringify(cartItems);
+    localStorage.setItem("cart", updatedCartData);
+  };
 
   return (
     <Container maxW="6xl" py={12}>
@@ -149,9 +168,10 @@ export default function Product() {
               h="56px"
               fontSize="md"
               _hover={{ shadow: "md" }}
-              onClick={() => alert("カートに入れるボタンを押下しました。")}
+              onClick={() => handleAddToCart(product)}
+              asChild
             >
-              カートに入れる
+              <Link to="/home">カートへ入れる</Link>
             </Button>
             <Text fontSize="s" color="gray.400" textAlign="center">
               全国一律送料無料 / 2〜3営業日以内に発送予定

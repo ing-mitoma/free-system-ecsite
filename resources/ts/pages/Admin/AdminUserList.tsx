@@ -8,7 +8,7 @@ interface User {
   id: number;
   name: string;
   email: string;
-  role: "管理者" | "一般スタッフ";
+  password: string;
 }
 
 export default function AdminUserList() {
@@ -57,8 +57,8 @@ export default function AdminUserList() {
           fetchUsers={fetchUsers}
         />
         <UserEditDialog
-          isAddDialogOpen={isAddDialogOpen}
-          setIsAddDialogOpen={setIsAddDialogOpen}
+          isEditDialogOpen={isEditDialogOpen}
+          setIsEditDialogOpen={setIsEditDialogOpen}
           editingUser={editingUser}
           fetchUsers={fetchUsers}
         />
