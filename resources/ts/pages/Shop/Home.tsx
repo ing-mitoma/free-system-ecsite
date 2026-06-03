@@ -55,7 +55,6 @@ const Home = () => {
           ))}
         </SimpleGrid>
 
-        {/* セーフティ：もし商品が1件もない場合の表示 */}
         {products.length === 0 && (
           <Text textAlign="center" color="gray.400" mt={12}>
             現在、販売中の商品はありません。

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Container,
@@ -12,29 +12,74 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import CartCard from "../../components/user/UserCartCard";
+import { Toaster } from "../../../../src/components/ui/toaster";
 
-const DUMMY_CART_ITEMS = [
-  {
-    id: 1,
-    name: "プレミアム レザーミニウォレット",
-    price: 12800,
-    quantity: 1,
-    emoji: "👛",
-  },
-  {
-    id: 2,
-    name: "クラシックキャンバス トートバッグ",
-    price: 8500,
-    quantity: 2,
-    emoji: "👜",
-  },
-];
+interface CartItemType {
+  product_id: number;
+  name: string;
+  emoji: string;
+  price: number;
+  quantity: number;
+  subtotal: number;
+}
+
+interface CartDetailType {
+  items: CartItemType[];
+  total_amount: number;
+}
 
 export default function Cart() {
-  const totalPrice = DUMMY_CART_ITEMS.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
+  const [cartDataDetails, setCartDetails] = useState<CartDetailType | null>(
+    null
   );
+  const fetchCartSummary = (items: any[]) => {
+    if (items.length === 0) {
+      setCartDetails({ items: [], total_amount: 0 });
+      return;
+    }
+    fetch("/api/cart/summary", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ items: items }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("カート情報の取得に失敗しました");
+        return res.json();
+      })
+      .then((data: CartDetailType) => {
+        setCartDetails(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    const currentCartData = localStorage.getItem("cart") || "[]";
+    const cartItems = JSON.parse(currentCartData);
+    fetchCartSummary(cartItems);
+  }, []);
+
+  const handleDeleteCartItem = (productId: number) => {
+    const currentCartData = localStorage.getItem("cart") || "[]";
+    const cartItems = JSON.parse(currentCartData);
+    const updatedCartItems = cartItems.filter(
+      (item: any) => item.product_id !== productId
+    );
+    localStorage.setItem("cart", JSON.stringify(updatedCartItems));
+    fetchCartSummary(updatedCartItems);
+  };
+
+  if (!cartDataDetails) {
+    return (
+      <Container maxW="6xl" py={12} textAlign="center">
+        <Text color="gray.500">カートの中身を確認中...</Text>
+        <Toaster />
+      </Container>
+    );
+  }
 
   return (
     <Container maxW="6xl" py={12}>
@@ -46,7 +91,7 @@ export default function Cart() {
         mb={6}
         _hover={{ bg: "gray.100" }}
       >
-        <Link to="/home">← カートに戻る</Link>
+        <Link to="/home">← お買い物を続ける</Link>
       </Button>
 
       <Heading as="h1" size="2xl" mb={8} fontWeight="black">
@@ -60,10 +105,15 @@ export default function Cart() {
       >
         <Box flex="2" w="full">
           <Stack gap={4}>
-            {DUMMY_CART_ITEMS.map((item) => (
-              <CartCard item={item} />
+            {cartDataDetails.items.map((item) => (
+              <CartCard
+                key={item.product_id}
+                item={item}
+                onDelete={handleDeleteCartItem}
+              />
             ))}
           </Stack>
+          <Toaster />
         </Box>
         <Box
           bg="white"
@@ -86,7 +136,7 @@ export default function Cart() {
               <DataList.Item>
                 <DataList.ItemLabel>商品小計</DataList.ItemLabel>
                 <DataList.ItemValue>
-                  ¥{totalPrice.toLocaleString()}
+                  ¥{cartDataDetails?.total_amount.toLocaleString()}
                 </DataList.ItemValue>
               </DataList.Item>
               <DataList.Item>
@@ -99,7 +149,7 @@ export default function Cart() {
                   合計金額
                 </DataList.ItemLabel>
                 <DataList.ItemValue>
-                  ¥{totalPrice.toLocaleString()}
+                  ¥{cartDataDetails?.total_amount.toLocaleString()}
                 </DataList.ItemValue>
               </DataList.Item>
             </DataList.Root>
