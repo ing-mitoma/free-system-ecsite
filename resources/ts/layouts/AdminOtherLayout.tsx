@@ -1,6 +1,6 @@
 import { Flex, Box, Heading, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "../components/admin/CreateSidebar";
+import Sidebar from "../components/admin/AdminSidebar";
 import { Children } from "react";
 
 interface LayoutProps {

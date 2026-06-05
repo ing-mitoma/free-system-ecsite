@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import CartCard from "../../components/user/UserCartCard";
-import { Toaster } from "../../../../src/components/ui/toaster";
+import { Toaster } from "./ui/toaster";
 
 interface CartItemType {
   product_id: number;

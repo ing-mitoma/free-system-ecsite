@@ -1,5 +1,5 @@
 import { Box, Button, Text, Flex } from "@chakra-ui/react";
-import { toaster } from "../../../../src/components/ui/toaster";
+import { toaster } from "../../pages/Shop/ui/toaster";
 
 interface CartItemType {
   product_id: number;
