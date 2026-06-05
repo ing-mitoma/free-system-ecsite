@@ -24,17 +24,9 @@ export default function Header() {
     >
       <Container maxW="6xl">
         <Flex align="center" justify="space-between" gap={4}>
-          {/* 🏬 ロゴエリア */}
-          <Heading
-            size="lg"
-            fontWeight="black"
-            color="black"
-            asChild // 💡 1. これを追加して、中身の Link コンポーネントに Chakra のデザインを継承させます
-          >
-            {/* 💡 2. as="a" と href="/" の代わりに、Link と to="/" を使います */}
+          <Heading size="lg" fontWeight="black" color="black">
             <Link to="/home">FREE SYSTEM</Link>
           </Heading>
-          {/* 🔍 検索バー（PCサイズ以上で表示、スマホでは隠す） */}
           <Input
             placeholder="キーワードで商品を検索..."
             maxW="400px"
@@ -44,11 +36,9 @@ export default function Header() {
             display={{ base: "none", md: "block" }}
           />
 
-          {/* 🛒 アイコンエリア */}
           <Flex align="center" gap={4}>
             <Box position="relative" textDecoration="none" asChild>
               <Link to="/cart">
-                {/* カートの絵文字ボタン */}
                 <IconButton
                   aria-label="Cart"
                   variant="ghost"
@@ -58,7 +48,6 @@ export default function Header() {
                   🛒
                 </IconButton>
 
-                {/* カート内の商品数バッジ */}
                 <Badge
                   colorPalette="pink"
                   variant="solid"
@@ -69,7 +58,7 @@ export default function Header() {
                   px={1.5}
                   fontSize="10px"
                 >
-                  1{/*カート内の商品点数を表す数*/}
+                  1
                 </Badge>
               </Link>
             </Box>

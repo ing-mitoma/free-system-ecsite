@@ -14,17 +14,33 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i=0; $i < 100; $i++) {
+        $productTemplates = [
+            ['name' => 'ヘンリーネックTシャツ', 'emoji' => '👕'],
+            ['name' => 'クラシックデニムジーンズ', 'emoji' => '👖'],
+            ['name' => 'ウールテーラードジャケット', 'emoji' => '🧥'],
+            ['name' => 'カジュアルスニーカー', 'emoji' => '👟'],
+            ['name' => 'キャンバストートバッグ', 'emoji' => '👜'],
+            ['name' => 'マウンテンパーカー', 'emoji' => '🧥'],
+            ['name' => 'コーデュロイキャップ', 'emoji' => '🧢'],
+            ['name' => 'レザーベルト', 'emoji' => '🥋'],
+            ['name' => 'オックスフォードシャツ', 'emoji' => '👔'],
+            ['name' => 'スウェットパーカー', 'emoji' => '👚'],
+        ];
+
+        for ($i = 0; $i < 100; $i++) {
+            $randomIndex = array_rand($productTemplates);
+            $selectedProduct = $productTemplates[$randomIndex];
+
             DB::table('products')->insert([
-            'name'       => 'ヘンリーネックTシャツ',
-            'price'      => "{$i}0000",
-            'stock'  => '123',
-            'category' => 'アパレル',
-            'emoji' => '🧥',
-            'description' => '優れた吸汗力と通気性を持つ生地を使用した商品です。',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+                'name'        => $selectedProduct['name'],
+                'price'       => "{$i}0000",
+                'stock'       => '123',
+                'category'    => 'アパレル',
+                'emoji'       => $selectedProduct['emoji'],
+                'description' => '優れた吸汗力と通気性を持つ生地を使用した商品です。',
+                'created_at'  => now(),
+                'updated_at'  => now(),
+            ]);
         }
     }
 }

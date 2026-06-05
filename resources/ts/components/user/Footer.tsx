@@ -15,9 +15,7 @@ export default function Footer() {
           pt={6}
           textAlign="center"
         >
-          <Text fontSize="xs">
-            &copy; {new Date().getFullYear()} free system rights reserved.
-          </Text>
+          <Text fontSize="xs">&copy; free system rights.</Text>
         </Box>
       </Container>
     </Box>
