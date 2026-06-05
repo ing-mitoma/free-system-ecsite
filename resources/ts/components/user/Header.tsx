@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   Box,
   Flex,
@@ -11,6 +11,10 @@ import {
 } from "@chakra-ui/react";
 
 export default function Header() {
+  const location = useLocation();
+
+  const isHomePage = location.pathname === "/home";
+
   return (
     <Box
       as="header"
@@ -27,14 +31,22 @@ export default function Header() {
           <Heading size="lg" fontWeight="black" color="black">
             <Link to="/home">FREE SYSTEM</Link>
           </Heading>
-          <Input
-            placeholder="キーワードで商品を検索..."
-            maxW="400px"
-            variant="subtle"
-            borderRadius="xl"
-            bg="gray.50"
-            display={{ base: "none", md: "block" }}
-          />
+          {isHomePage ? (
+            <Input
+              placeholder="キーワードで商品を検索..."
+              maxW="400px"
+              variant="subtle"
+              borderRadius="xl"
+              bg="gray.50"
+              display={{ base: "none", md: "block" }}
+            />
+          ) : (
+            <Box
+              maxW="400px"
+              width="full"
+              display={{ base: "none", md: "block" }}
+            />
+          )}
 
           <Flex align="center" gap={4}>
             <Box position="relative" textDecoration="none" asChild>

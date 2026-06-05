@@ -6,6 +6,7 @@ import {
   Stack,
   Field,
   Input,
+  DialogCloseTrigger,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
@@ -56,7 +57,7 @@ export default function UserEditDialog({
       email: formData.email,
       password: formData.password,
     };
-    fetch("/api/users/{editingUser.id}", {
+    fetch(`/api/users/${editingUser.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -102,11 +103,11 @@ export default function UserEditDialog({
             <form onSubmit={handleEdit}>
               <Dialog.Header>
                 <Dialog.Title fontWeight="black" fontSize="xl">
-                  管理者情報の作成
+                  管理者情報の編集
                 </Dialog.Title>
-                <Dialog.CloseTrigger>
+                <DialogCloseTrigger asChild>
                   <CloseButton size="sm" />
-                </Dialog.CloseTrigger>
+                </DialogCloseTrigger>
               </Dialog.Header>
               <Dialog.Body>
                 <Stack gap={4} my={4}>
