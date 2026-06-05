@@ -6,6 +6,7 @@ import {
   Stack,
   Field,
   Input,
+  DialogCloseTrigger,
 } from "@chakra-ui/react";
 import { useState } from "react";
 
@@ -80,9 +81,9 @@ export default function UserAddDialog({
                 <Dialog.Title fontWeight="black" fontSize="xl">
                   管理者情報の作成
                 </Dialog.Title>
-                <Dialog.CloseTrigger>
+                <DialogCloseTrigger asChild>
                   <CloseButton size="sm" />
-                </Dialog.CloseTrigger>
+                </DialogCloseTrigger>
               </Dialog.Header>
               <Dialog.Body>
                 <Stack gap={4} my={4}>
