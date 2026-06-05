@@ -12,7 +12,7 @@ import {
   Spinner,
   Center,
 } from "@chakra-ui/react";
-import { Toaster, toaster } from "../../../../src/components/ui/toaster";
+import { Toaster, toaster } from "./ui/toaster";
 
 interface ProductType {
   id: number;

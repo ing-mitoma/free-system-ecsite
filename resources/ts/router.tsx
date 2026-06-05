@@ -5,7 +5,7 @@ import ShopLayout from "./layouts/ShopLayout";
 import Cart from "./pages/Shop/Cart";
 import Product from "./pages/Shop/Product";
 import Checkout from "./pages/Shop/Checkout";
-import AdminLogin from "./pages/Admin/login";
+import AdminLogin from "./pages/Admin/AdiminLogin";
 import AdminAuthGuard from "./components/admin/AdminAuthGuard";
 import AdminDashboard from "./pages/Admin/AdminHome";
 import AdminProductList from "./pages/Admin/AdminProductList";
@@ -41,7 +41,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "/checkout", // 💡 追加：購入画面のURLを設定
+    path: "/checkout",
     element: (
       <ShopLayout>
         <Checkout />
@@ -69,7 +69,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/users", // 💡 追加
+    path: "/admin/users",
     element: (
       <AdminAuthGuard>
         <AdminUserList />

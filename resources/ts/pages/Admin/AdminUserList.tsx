@@ -77,6 +77,7 @@ export default function AdminUserList() {
               <Table.ColumnHeader>管理ID</Table.ColumnHeader>
               <Table.ColumnHeader>氏名</Table.ColumnHeader>
               <Table.ColumnHeader>メールアドレス</Table.ColumnHeader>
+              <Table.ColumnHeader>パスワード</Table.ColumnHeader>
               <Table.ColumnHeader>操作</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
@@ -86,6 +87,7 @@ export default function AdminUserList() {
                 <Table.Cell>{user.id}</Table.Cell>
                 <Table.Cell>{user.name}</Table.Cell>
                 <Table.Cell>{user.email}</Table.Cell>
+                <Table.Cell>{user.password}</Table.Cell>
                 <Table.Cell textAlign="end">
                   <HStack>
                     <Button

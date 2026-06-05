@@ -9,6 +9,7 @@ import {
   Input,
   Button,
   Center,
+  Field,
 } from "@chakra-ui/react";
 
 export default function AdminLogin() {
@@ -16,17 +17,32 @@ export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email === "admin@minimal.com" && password === "password") {
-      // ブラウザの記憶（localStorage）に「ログイン中！」のスタンプを押す
-      localStorage.setItem("admin_logged_in", "true");
-      // 管理画面のトップへ進む
-      navigate("/admin/home");
-    } else {
-      alert(
-        "メールアドレスまたはパスワードが違います。\n(テスト用: admin@minimal.com / password)"
-      );
+    try {
+      const response = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("admin_user", JSON.stringify(data.user));
+        navigate("/admin/home");
+      } else {
+        setIsError(true);
+        setErrorMessage(data.message || "ログインに失敗しました。");
+      }
+    } catch (error) {
+      setIsError(true);
+      setErrorMessage("サーバーとの通信に失敗しました。");
     }
   };
 
@@ -51,47 +67,30 @@ export default function AdminLogin() {
               </Text>
             </Box>
 
-            <Stack gap={4}>
-              <Box>
-                <Text fontSize="xs" fontWeight="bold" mb={1} color="gray.600">
-                  メールアドレス
-                </Text>
+            <Stack gap="8">
+              <Field.Root>
+                <Field.Label> メールアドレス</Field.Label>
                 <Input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@minimal.com"
-                  bg="gray.50"
-                  variant="subtle"
-                  h="48px"
                   required
                 />
-              </Box>
-              <Box>
-                <Text fontSize="xs" fontWeight="bold" mb={1} color="gray.600">
-                  パスワード
-                </Text>
+              </Field.Root>
+
+              <Field.Root>
+                <Field.Label>パスワード</Field.Label>
                 <Input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  bg="gray.50"
-                  variant="subtle"
-                  h="48px"
                   required
                 />
-              </Box>
+              </Field.Root>
             </Stack>
-
-            <Button
-              type="submit"
-              colorPalette="black"
-              w="full"
-              size="lg"
-              fontWeight="bold"
-              h="50px"
-            >
+            <Button type="submit" colorPalette="black" fontWeight="bold">
               ログイン
             </Button>
           </Stack>

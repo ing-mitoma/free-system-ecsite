@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import CartCard from "../../components/user/UserCartCard";
-import { Toaster } from "../../../../src/components/ui/toaster";
+import { Toaster } from "./ui/toaster";
 
 interface CartItemType {
   product_id: number;
@@ -72,11 +72,23 @@ export default function Cart() {
     fetchCartSummary(updatedCartItems);
   };
 
+  const handleUpdataQuantity = (productId: number, newQuantity: number) => {
+    const currentCartData = localStorage.getItem("cart") || "[]";
+    const cartItems = JSON.parse(currentCartData);
+    const updatedCartItems = cartItems.map((item: any) => {
+      if (item.product_id === productId) {
+        return { ...item, quantity: newQuantity };
+      }
+      return item;
+    });
+    localStorage.setItem("cart", JSON.stringify(updatedCartItems));
+    fetchCartSummary(updatedCartItems);
+  };
+
   if (!cartDataDetails) {
     return (
       <Container maxW="6xl" py={12} textAlign="center">
         <Text color="gray.500">カートの中身を確認中...</Text>
-        <Toaster />
       </Container>
     );
   }
@@ -106,14 +118,15 @@ export default function Cart() {
         <Box flex="2" w="full">
           <Stack gap={4}>
             {cartDataDetails.items.map((item) => (
+              //toasterを追加
               <CartCard
                 key={item.product_id}
                 item={item}
                 onDelete={handleDeleteCartItem}
+                onUpdataQuantity={handleUpdataQuantity}
               />
             ))}
           </Stack>
-          <Toaster />
         </Box>
         <Box
           bg="white"
@@ -177,6 +190,7 @@ export default function Cart() {
           </Button>
         </Box>
       </Flex>
+      <Toaster />
     </Container>
   );
 }

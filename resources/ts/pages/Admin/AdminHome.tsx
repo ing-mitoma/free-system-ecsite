@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Flex, Heading, Text, SimpleGrid } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
-import Sidebar from "../../components/admin/CreateSidebar";
+import Sidebar from "../../components/admin/AdminSidebar";
 import CardHome from "../../components/admin/AdminHomeCard";
 
 export default function AdminDashboard() {

@@ -1,5 +1,5 @@
 import { Box, Button, Text, Flex } from "@chakra-ui/react";
-import { toaster } from "../../../../src/components/ui/toaster";
+import { toaster } from "../../pages/Shop/ui/toaster";
 
 interface CartItemType {
   product_id: number;
@@ -12,9 +12,14 @@ interface CartItemType {
 interface CartCardProps {
   item: CartItemType;
   onDelete: (productId: number) => void;
+  onUpdataQuantity: (productId: number, newQuantity: number) => void;
 }
 
-export default function CartCard({ item, onDelete }: CartCardProps) {
+export default function CartCard({
+  item,
+  onDelete,
+  onUpdataQuantity,
+}: CartCardProps) {
   return (
     <Flex
       bg="white"
@@ -38,26 +43,68 @@ export default function CartCard({ item, onDelete }: CartCardProps) {
         </Box>
       </Flex>
       <Flex align="center" gap={6}>
-        <Text fontWeight="bold">数量: {item.quantity}</Text>
-        <Text fontWeight="black" color="gray.900">
-          ¥{(item.price * item.quantity).toLocaleString()}
-        </Text>
-        <Button
-          size="sm"
-          variant="ghost"
-          colorPalette="red"
+        <Flex
+          align="center"
           border="1px solid"
-          onClick={() => {
-            onDelete(item.product_id);
-            toaster.create({
-              description: "商品を削除しました",
-              type: "info",
-              closable: true,
-            });
-          }}
+          borderColor="gray.200"
+          borderRadius="md"
+          p={1}
+          gap={2}
         >
-          削除
-        </Button>
+          <Button
+            size="xs"
+            variant="ghost"
+            disabled={item.quantity <= 1}
+            onClick={() => {
+              onUpdataQuantity(item.product_id, item.quantity - 1);
+            }}
+          >
+            -
+          </Button>
+
+          <Text fontWeight="bold" minW="40px" textAlign="center">
+            {item.quantity}
+          </Text>
+
+          <Button
+            size="xs"
+            variant="ghost"
+            onClick={() => {
+              onUpdataQuantity(item.product_id, item.quantity + 1);
+            }}
+          >
+            +
+          </Button>
+        </Flex>
+
+        <Flex align="center" gap={4}>
+          <Text
+            fontWeight="black"
+            color="gray.900"
+            minW="90px"
+            textAlign="right"
+          >
+            ¥{(item.price * item.quantity).toLocaleString()}
+          </Text>
+
+          <Button
+            size="sm"
+            variant="ghost"
+            colorPalette="red"
+            border="1px solid"
+            onClick={() => {
+              onDelete(item.product_id);
+              toaster.create({
+                description: "商品を削除しました",
+                type: "info",
+                duration: 2000,
+                closable: true,
+              });
+            }}
+          >
+            削除
+          </Button>
+        </Flex>
       </Flex>
     </Flex>
   );

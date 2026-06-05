@@ -90,7 +90,7 @@ export default function AdminProductList() {
               <Table.Row key={product.id}>
                 <Table.Cell>{product.id}</Table.Cell>
                 <Table.Cell>{product.name}</Table.Cell>
-                <Table.Cell>{product.price}</Table.Cell>
+                <Table.Cell>¥{product.price.toLocaleString()}</Table.Cell>
                 <Table.Cell>{product.category}</Table.Cell>
                 <Table.Cell>{product.emoji}</Table.Cell>
                 <Table.Cell textAlign="end">
