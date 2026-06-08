@@ -8,7 +8,13 @@ import {
   Input,
   DialogCloseTrigger,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
+import {
+  EditUserSchemaType,
+  editUserSchema,
+} from "../validation/AdminUserValidation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface User {
   id: number;
@@ -30,32 +36,35 @@ export default function UserEditDialog({
   editingUser,
   fetchUsers,
 }: UserEditDialogProps) {
-  const [formData, setFormData] = useState({
-    id: "",
-    name: "",
-    email: "",
-    password: "",
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<EditUserSchemaType>({
+    resolver: zodResolver(editUserSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+    },
   });
-
   useEffect(() => {
     if (editingUser) {
-      setFormData({
-        id: String(editingUser.id),
-        name: editingUser.name,
+      reset({
+        username: String(editingUser.name),
         email: String(editingUser.email),
-        password: editingUser.password,
       });
+    } else {
+      reset({ username: "", email: "" });
     }
-  }, [editingUser]);
+  }, [editingUser, reset]);
 
-  const handleEdit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = (data: EditUserSchemaType) => {
     if (!editingUser) return;
 
     const submitData = {
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
+      name: data.username,
+      email: data.email,
     };
     fetch(`/api/users/${editingUser.id}`, {
       method: "PUT",
@@ -69,12 +78,6 @@ export default function UserEditDialog({
           alert("更新が完了しました。");
           fetchUsers();
           setIsEditDialogOpen(false);
-          setFormData({
-            id: "",
-            name: "",
-            email: "",
-            password: "",
-          });
         } else {
           throw new Error("更新失敗");
         }
@@ -100,7 +103,7 @@ export default function UserEditDialog({
         <Dialog.Backdrop />
         <Dialog.Positioner>
           <Dialog.Content>
-            <form onSubmit={handleEdit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <Dialog.Header>
                 <Dialog.Title fontWeight="black" fontSize="xl">
                   管理者情報の編集
@@ -113,46 +116,17 @@ export default function UserEditDialog({
                 <Stack gap={4} my={4}>
                   <Field.Root>
                     <Field.Label>管理者名</Field.Label>
-                    <Input
-                      placeholder="例：山田 太郎"
-                      value={formData.name}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          name: e.target.value,
-                        })
-                      }
-                      required
-                    />
+                    <Input {...register("username")} />
+                    {errors.username && (
+                      <p style={{ color: "red" }}>{errors.username.message}</p>
+                    )}
                   </Field.Root>
                   <Field.Root>
                     <Field.Label>メールアドレス</Field.Label>
-                    <Input
-                      type="email"
-                      placeholder="example@in-g.jp"
-                      value={formData.email}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          email: e.target.value,
-                        })
-                      }
-                      required
-                    />
-                  </Field.Root>
-                  <Field.Root>
-                    <Field.Label>パスワード</Field.Label>
-                    <Input
-                      type="password"
-                      value={formData.password}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          password: e.target.value,
-                        })
-                      }
-                      required
-                    />
+                    <Input {...register("email")} />
+                    {errors.email && (
+                      <p style={{ color: "red" }}>{errors.email.message}</p>
+                    )}
                   </Field.Root>
                 </Stack>
               </Dialog.Body>

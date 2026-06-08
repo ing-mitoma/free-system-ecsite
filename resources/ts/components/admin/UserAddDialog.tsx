@@ -8,7 +8,12 @@ import {
   Input,
   DialogCloseTrigger,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import {
+  AddUserSchemaType,
+  UserSchema,
+} from "../validation/AdminUserValidation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface UserAddDialogProps {
   isAddDialogOpen: boolean;
@@ -21,17 +26,23 @@ export default function UserAddDialog({
   setIsAddDialogOpen,
   fetchUsers,
 }: UserAddDialogProps) {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AddUserSchemaType>({
+    resolver: zodResolver(UserSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+    },
   });
-  const handleAdd = (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = (data: AddUserSchemaType) => {
     const submitData = {
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
+      name: data.username,
+      email: data.email,
+      password: data.password,
     };
     fetch("/api/users", {
       method: "POST",
@@ -45,11 +56,6 @@ export default function UserAddDialog({
           alert("登録が完了しました。");
           fetchUsers();
           setIsAddDialogOpen(false);
-          setFormData({
-            name: "",
-            email: "",
-            password: "",
-          });
         } else {
           throw new Error("登録失敗");
         }
@@ -59,6 +65,7 @@ export default function UserAddDialog({
         setIsAddDialogOpen(true);
       });
   };
+
   return (
     <Dialog.Root
       size="lg"
@@ -76,7 +83,7 @@ export default function UserAddDialog({
         <Dialog.Backdrop />
         <Dialog.Positioner>
           <Dialog.Content>
-            <form onSubmit={handleAdd}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <Dialog.Header>
                 <Dialog.Title fontWeight="black" fontSize="xl">
                   管理者情報の作成
@@ -89,46 +96,28 @@ export default function UserAddDialog({
                 <Stack gap={4} my={4}>
                   <Field.Root>
                     <Field.Label>管理者名</Field.Label>
-                    <Input
-                      placeholder="例：山田 太郎"
-                      value={formData.name}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          name: e.target.value,
-                        })
-                      }
-                      required
-                    />
+                    <Input {...register("username")} />
+                    {errors.username && (
+                      <p style={{ color: "red" }}>{errors.username.message}</p>
+                    )}
                   </Field.Root>
                   <Field.Root>
                     <Field.Label>メールアドレス</Field.Label>
-                    <Input
-                      type="email"
-                      placeholder="example@in-g.jp"
-                      value={formData.email}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          email: e.target.value,
-                        })
-                      }
-                      required
-                    />
+                    <Input {...register("email")} />
+                    {errors.email && (
+                      <p style={{ color: "red" }}>{errors.email.message}</p>
+                    )}
                   </Field.Root>
                   <Field.Root>
                     <Field.Label>パスワード</Field.Label>
-                    <Input
-                      type="password"
-                      value={formData.password}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          password: e.target.value,
-                        })
-                      }
-                      required
-                    />
+                    <Input type="password" {...register("password")} />
+                    {errors.password ? (
+                      <p style={{ color: "red" }}>{errors.password.message}</p>
+                    ) : (
+                      <p>
+                        ※英数字（大文字を1つ以上）を使用し、8文字以上でパスワードを設定してください
+                      </p>
+                    )}
                   </Field.Root>
                 </Stack>
               </Dialog.Body>

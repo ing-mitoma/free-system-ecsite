@@ -9,6 +9,12 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import {
+  AddProductSchemaType,
+  productSchema,
+} from "../validation/AdminProductValidation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface ProductAddDialogProps {
   isAddDialogOpen: boolean;
@@ -21,23 +27,28 @@ export default function ProductAddDialog({
   setIsAddDialogOpen,
   fetchProducts,
 }: ProductAddDialogProps) {
-  const [formData, setFormData] = useState({
-    id: "",
-    name: "",
-    price: "",
-    category: "",
-    emoji: "",
-    description: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AddProductSchemaType>({
+    resolver: zodResolver(productSchema),
+    defaultValues: {
+      name: "",
+      price: undefined,
+      category: "",
+      emoji: "",
+      description: "",
+    },
   });
 
-  const handleAdd = (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = (data: AddProductSchemaType) => {
     const submitData = {
-      name: formData.name,
-      price: Number(formData.price),
-      category: formData.category,
-      emoji: formData.emoji,
-      description: formData.description,
+      name: data.name,
+      price: data.price,
+      category: data.category,
+      emoji: data.emoji,
+      description: data.description,
     };
 
     fetch("/api/products", {
@@ -52,14 +63,6 @@ export default function ProductAddDialog({
           alert("登録が完了しました。");
           fetchProducts();
           setIsAddDialogOpen(false);
-          setFormData({
-            id: "",
-            name: "",
-            price: "",
-            category: "",
-            emoji: "",
-            description: "",
-          });
         } else {
           throw new Error("登録失敗");
         }
@@ -86,7 +89,7 @@ export default function ProductAddDialog({
         <Dialog.Backdrop />
         <Dialog.Positioner>
           <Dialog.Content>
-            <form onSubmit={handleAdd}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <Dialog.Header>
                 <Dialog.Title fontWeight="black" fontSize="xl">
                   新規商品の登録
@@ -99,43 +102,22 @@ export default function ProductAddDialog({
                 <Stack gap={4} my={4}>
                   <Field.Root>
                     <Field.Label>商品名</Field.Label>
-                    <Input
-                      placeholder="商品名"
-                      value={formData.name}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          name: e.target.value,
-                        })
-                      }
-                      required
-                    />
+                    <Input {...register("name")} />
+                    {errors.name && (
+                      <p style={{ color: "red" }}>{errors.name.message}</p>
+                    )}
                   </Field.Root>
                   <Field.Root>
                     <Field.Label>価格</Field.Label>
-                    <Input
-                      type="price"
-                      placeholder="1000"
-                      value={formData.price}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          price: e.target.value,
-                        })
-                      }
-                      required
-                    />
+                    <Input {...register("price", { valueAsNumber: true })} />
+                    {errors.price && (
+                      <p style={{ color: "red" }}>{errors.price.message}</p>
+                    )}
                   </Field.Root>
                   <Field.Root>
                     <Field.Label>カテゴリー</Field.Label>
                     <select
-                      value={formData.category}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          category: e.target.value,
-                        })
-                      }
+                      {...register("category")}
                       style={{
                         width: "100%",
                         padding: "8px",
@@ -154,34 +136,25 @@ export default function ProductAddDialog({
                       </option>
                       <option value="ライフスタイル">🥛 ライフスタイル</option>
                     </select>
+                    {errors.category && (
+                      <p style={{ color: "red" }}>{errors.category.message}</p>
+                    )}
                   </Field.Root>
                   <Field.Root>
                     <Field.Label>画像</Field.Label>
-                    <Input
-                      type="price"
-                      placeholder=""
-                      value={formData.emoji}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          emoji: e.target.value,
-                        })
-                      }
-                      required
-                    />
+                    <Input {...register("emoji")} />
+                    {errors.emoji && (
+                      <p style={{ color: "red" }}>{errors.emoji.message}</p>
+                    )}
                   </Field.Root>
                   <Field.Root>
                     <Field.Label>商品説明</Field.Label>
-                    <Textarea
-                      value={formData.description}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          description: e.target.value,
-                        })
-                      }
-                      required
-                    />
+                    <Textarea {...register("description")} />
+                    {errors.description && (
+                      <p style={{ color: "red" }}>
+                        {errors.description.message}
+                      </p>
+                    )}
                   </Field.Root>
                 </Stack>
               </Dialog.Body>
