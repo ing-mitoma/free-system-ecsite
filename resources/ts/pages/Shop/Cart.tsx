@@ -15,7 +15,7 @@ import {
 import { Link } from "react-router-dom";
 import CartCard from "../../components/user/UserCartCard";
 import { Toaster } from "./ui/toaster";
-import { useQuery } from "@tanstack/react-query";
+import { useCartSummary } from "../../hooks/useCartSummary";
 
 interface CartItemType {
   product_id: number;
@@ -32,7 +32,7 @@ interface CartDetailType {
 }
 
 export default function Cart() {
-  const [cartItems, setCartItems] = useState<any[]>(() => {
+  const [cartItems, setCartItems] = useState<CartItemType[]>(() => {
     const currentCartData = localStorage.getItem("cart") || "[]";
     return JSON.parse(currentCartData);
   });
@@ -42,37 +42,18 @@ export default function Cart() {
     isLoading,
     isError,
     error,
-  } = useQuery<CartDetailType>({
-    queryKey: ["cartSummary", cartItems],
-    queryFn: async () => {
-      if (cartItems.length === 0) {
-        return { items: [], total_amount: 0 };
-      }
-      const response = await fetch("/api/cart/summary", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ items: cartItems }),
-      });
-      if (!response.ok) {
-        throw new Error("ユーザー一覧の取得に失敗しました");
-      }
-      return response.json();
-    },
-    staleTime: 0,
-  });
+  } = useCartSummary(cartItems);
 
   const handleDeleteCartItem = (productId: number) => {
     const updatedCartItems = cartItems.filter(
-      (item: any) => item.product_id !== productId
+      (item: CartItemType) => item.product_id !== productId
     );
     setCartItems(updatedCartItems);
     localStorage.setItem("cart", JSON.stringify(updatedCartItems));
   };
 
   const handleUpdataQuantity = (productId: number, newQuantity: number) => {
-    const updatedCartItems = cartItems.map((item: any) => {
+    const updatedCartItems = cartItems.map((item: CartItemType) => {
       if (item.product_id === productId) {
         return { ...item, quantity: newQuantity };
       }
@@ -127,7 +108,6 @@ export default function Cart() {
         <Box flex="2" w="full">
           <Stack gap={4}>
             {cartDataDetails?.items.map((item) => (
-              //toasterを追加
               <CartCard
                 key={item.product_id}
                 item={item}
