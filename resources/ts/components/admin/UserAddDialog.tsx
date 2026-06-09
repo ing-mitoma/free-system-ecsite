@@ -14,56 +14,62 @@ import {
 } from "../validation/AdminUserValidation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface UserAddDialogProps {
   isAddDialogOpen: boolean;
   setIsAddDialogOpen: (open: boolean) => void;
-  fetchUsers: () => void;
 }
+
+const createUser = async (submitData: AddUserSchemaType) => {
+  const res = await fetch("/api/users", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(submitData),
+  });
+
+  if (!res.ok) {
+    throw new Error("管理者の登録に失敗しました");
+  }
+  return res.json();
+};
 
 export default function UserAddDialog({
   isAddDialogOpen,
   setIsAddDialogOpen,
-  fetchUsers,
 }: UserAddDialogProps) {
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<AddUserSchemaType>({
     resolver: zodResolver(UserSchema),
     defaultValues: {
-      username: "",
+      name: "",
       email: "",
       password: "",
     },
   });
+
+  const addMutation = useMutation({
+    mutationFn: createUser,
+    onSuccess: () => {
+      alert("登録が完了しました。");
+      reset();
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      setIsAddDialogOpen(false);
+    },
+    onError: (error: any) => {
+      alert(error.message);
+    },
+  });
+
   const onSubmit = (data: AddUserSchemaType) => {
-    const submitData = {
-      name: data.username,
-      email: data.email,
-      password: data.password,
-    };
-    fetch("/api/users", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(submitData),
-    })
-      .then((res) => {
-        if (res.ok) {
-          alert("登録が完了しました。");
-          fetchUsers();
-          setIsAddDialogOpen(false);
-        } else {
-          throw new Error("登録失敗");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setIsAddDialogOpen(true);
-      });
+    addMutation.mutate(data);
   };
 
   return (
@@ -96,9 +102,9 @@ export default function UserAddDialog({
                 <Stack gap={4} my={4}>
                   <Field.Root>
                     <Field.Label>管理者名</Field.Label>
-                    <Input {...register("username")} />
-                    {errors.username && (
-                      <p style={{ color: "red" }}>{errors.username.message}</p>
+                    <Input {...register("name")} />
+                    {errors.name && (
+                      <p style={{ color: "red" }}>{errors.name.message}</p>
                     )}
                   </Field.Root>
                   <Field.Root>

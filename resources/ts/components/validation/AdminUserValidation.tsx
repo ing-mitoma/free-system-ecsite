@@ -3,7 +3,7 @@ const strictEmailRegex =
   /^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_+-]@([a-z0-9][a-z0-9\-]*\.)+[a-z]{2,}$/i;
 
 export const UserSchema = z.object({
-  username: z
+  name: z
     .string()
     .min(1, { message: "管理者名は必須です" })
     .max(20, { message: "20文字以内で入力してください" }),

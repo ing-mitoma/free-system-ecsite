@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Container,
@@ -9,10 +9,13 @@ import {
   Stack,
   DataList,
   Separator,
+  Center,
+  Spinner,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import CartCard from "../../components/user/UserCartCard";
 import { Toaster } from "./ui/toaster";
+import { useQuery } from "@tanstack/react-query";
 
 interface CartItemType {
   product_id: number;
@@ -29,66 +32,72 @@ interface CartDetailType {
 }
 
 export default function Cart() {
-  const [cartDataDetails, setCartDetails] = useState<CartDetailType | null>(
-    null
-  );
-  const fetchCartSummary = (items: any[]) => {
-    if (items.length === 0) {
-      setCartDetails({ items: [], total_amount: 0 });
-      return;
-    }
-    fetch("/api/cart/summary", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ items: items }),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("カート情報の取得に失敗しました");
-        return res.json();
-      })
-      .then((data: CartDetailType) => {
-        setCartDetails(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  useEffect(() => {
+  const [cartItems, setCartItems] = useState<any[]>(() => {
     const currentCartData = localStorage.getItem("cart") || "[]";
-    const cartItems = JSON.parse(currentCartData);
-    fetchCartSummary(cartItems);
-  }, []);
+    return JSON.parse(currentCartData);
+  });
+
+  const {
+    data: cartDataDetails,
+    isLoading,
+    isError,
+    error,
+  } = useQuery<CartDetailType>({
+    queryKey: ["cartSummary", cartItems],
+    queryFn: async () => {
+      if (cartItems.length === 0) {
+        return { items: [], total_amount: 0 };
+      }
+      const response = await fetch("/api/cart/summary", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ items: cartItems }),
+      });
+      if (!response.ok) {
+        throw new Error("ユーザー一覧の取得に失敗しました");
+      }
+      return response.json();
+    },
+    staleTime: 0,
+  });
 
   const handleDeleteCartItem = (productId: number) => {
-    const currentCartData = localStorage.getItem("cart") || "[]";
-    const cartItems = JSON.parse(currentCartData);
     const updatedCartItems = cartItems.filter(
       (item: any) => item.product_id !== productId
     );
+    setCartItems(updatedCartItems);
     localStorage.setItem("cart", JSON.stringify(updatedCartItems));
-    fetchCartSummary(updatedCartItems);
   };
 
   const handleUpdataQuantity = (productId: number, newQuantity: number) => {
-    const currentCartData = localStorage.getItem("cart") || "[]";
-    const cartItems = JSON.parse(currentCartData);
     const updatedCartItems = cartItems.map((item: any) => {
       if (item.product_id === productId) {
         return { ...item, quantity: newQuantity };
       }
       return item;
     });
+    setCartItems(updatedCartItems);
     localStorage.setItem("cart", JSON.stringify(updatedCartItems));
-    fetchCartSummary(updatedCartItems);
   };
 
-  if (!cartDataDetails) {
+  if (isLoading) {
+    return (
+      <Center minH="50vh">
+        <Spinner size="xl" color="black" />
+      </Center>
+    );
+  }
+  if (isError) {
     return (
       <Container maxW="6xl" py={12} textAlign="center">
-        <Text color="gray.500">カートの中身を確認中...</Text>
+        <Text color="red.500" fontWeight="bold">
+          エラー:{" "}
+          {error instanceof Error
+            ? error.message
+            : "データの取得に失敗しました"}
+        </Text>
       </Container>
     );
   }
@@ -117,7 +126,7 @@ export default function Cart() {
       >
         <Box flex="2" w="full">
           <Stack gap={4}>
-            {cartDataDetails.items.map((item) => (
+            {cartDataDetails?.items.map((item) => (
               //toasterを追加
               <CartCard
                 key={item.product_id}

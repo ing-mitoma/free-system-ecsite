@@ -1,8 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Box, Flex, Table, Button, HStack } from "@chakra-ui/react";
+import { useState } from "react";
+import {
+  Box,
+  Flex,
+  Table,
+  Button,
+  HStack,
+  Center,
+  Spinner,
+} from "@chakra-ui/react";
 import AdminOtherLayout from "../../layouts/AdminOtherLayout";
 import UserAddDialog from "../../components/admin/UserAddDialog";
 import UserEditDialog from "../../components/admin/UserEditDialog";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface User {
   id: number;
@@ -11,24 +20,39 @@ interface User {
   password: string;
 }
 
+const deleteUser = async (id: number) => {
+  const res = await fetch(`/api/users/${id}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) {
+    throw new Error("エラーが起きました");
+  }
+};
+
 export default function AdminUserList() {
-  const [users, setUsers] = useState<User[]>([]);
+  const queryClient = useQueryClient();
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
-  const fetchUsers = () => {
-    fetch("/api/users")
-      .then((res) => res.json())
-      .then((data) => {
-        setUsers(data);
-      })
-      .catch((error) => console.log("データの取得失敗", error));
-  };
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      const response = await fetch(`/api/users`);
+      if (!response.ok) throw new Error("商品一覧の取得に失敗しました");
+      return response.json() as Promise<User[]>;
+    },
+  });
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  const deleteMutation = useMutation({
+    mutationFn: deleteUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+    onError: (error) => {
+      alert(error.message);
+    },
+  });
 
   const openEditDialog = (user: User) => {
     setEditingUser(user);
@@ -36,14 +60,27 @@ export default function AdminUserList() {
   };
 
   const handleDelete = (id: number) => {
-    if (window.confirm("本当にこの商品を削除しますか？")) {
-      fetch(`/api/users/${id}`, {
-        method: "DELETE",
-      }).then(() => {
-        setUsers(users.filter((users) => users.id !== id));
-      });
+    if (!window.confirm("本当にこの商品を削除しますか？")) {
+      return;
     }
+    deleteMutation.mutate(id);
   };
+
+  if (isLoading) {
+    return (
+      <Center minH="100vh" flexDirection="column" gap={4}>
+        <Spinner color="black" size="xl" width="40px" height="40px" />
+        商品を読み込み中...
+      </Center>
+    );
+  }
+  if (isError) {
+    return (
+      <div className="p-8">
+        <p className="text-red-500">エラー: {error.message}</p>
+      </div>
+    );
+  }
 
   return (
     <AdminOtherLayout
@@ -54,13 +91,11 @@ export default function AdminUserList() {
         <UserAddDialog
           isAddDialogOpen={isAddDialogOpen}
           setIsAddDialogOpen={setIsAddDialogOpen}
-          fetchUsers={fetchUsers}
         />
         <UserEditDialog
           isEditDialogOpen={isEditDialogOpen}
           setIsEditDialogOpen={setIsEditDialogOpen}
           editingUser={editingUser}
-          fetchUsers={fetchUsers}
         />
       </Flex>
       <Box
@@ -80,7 +115,7 @@ export default function AdminUserList() {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {users.map((user) => (
+            {data?.map((user) => (
               <Table.Row key={user.id}>
                 <Table.Cell>{user.name}</Table.Cell>
                 <Table.Cell>{user.email}</Table.Cell>

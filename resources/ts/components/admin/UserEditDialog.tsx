@@ -15,6 +15,7 @@ import {
 } from "../validation/AdminUserValidation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface User {
   id: number;
@@ -27,15 +28,34 @@ interface UserEditDialogProps {
   isEditDialogOpen: boolean;
   setIsEditDialogOpen: (open: boolean) => void;
   editingUser: User | null;
-  fetchUsers: () => void;
 }
+const updateUser = async ({
+  id,
+  data,
+}: {
+  id: number;
+  data: EditUserSchemaType;
+}) => {
+  const res = await fetch(`/api/users/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    throw new Error("商品情報の更新に失敗しました");
+  }
+  return res.json();
+};
 
 export default function UserEditDialog({
   isEditDialogOpen,
   setIsEditDialogOpen,
   editingUser,
-  fetchUsers,
 }: UserEditDialogProps) {
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
@@ -44,48 +64,39 @@ export default function UserEditDialog({
   } = useForm<EditUserSchemaType>({
     resolver: zodResolver(editUserSchema),
     defaultValues: {
-      username: "",
+      name: "",
       email: "",
     },
   });
   useEffect(() => {
     if (editingUser) {
       reset({
-        username: String(editingUser.name),
+        name: String(editingUser.name),
         email: String(editingUser.email),
       });
     } else {
-      reset({ username: "", email: "" });
+      reset({ name: "", email: "" });
     }
   }, [editingUser, reset]);
 
+  const editMutation = useMutation({
+    mutationFn: updateUser,
+    onSuccess: () => {
+      alert("更新が完了しました。");
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      setIsEditDialogOpen(false);
+    },
+    onError: (error: any) => {
+      alert(error.message);
+    },
+  });
+
   const onSubmit = (data: EditUserSchemaType) => {
     if (!editingUser) return;
-
-    const submitData = {
-      name: data.username,
-      email: data.email,
-    };
-    fetch(`/api/users/${editingUser.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(submitData),
-    })
-      .then((res) => {
-        if (res.ok) {
-          alert("更新が完了しました。");
-          fetchUsers();
-          setIsEditDialogOpen(false);
-        } else {
-          throw new Error("更新失敗");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setIsEditDialogOpen(true);
-      });
+    editMutation.mutate({
+      id: editingUser.id,
+      data: data,
+    });
   };
   return (
     <Dialog.Root
@@ -116,9 +127,9 @@ export default function UserEditDialog({
                 <Stack gap={4} my={4}>
                   <Field.Root>
                     <Field.Label>管理者名</Field.Label>
-                    <Input {...register("username")} />
-                    {errors.username && (
-                      <p style={{ color: "red" }}>{errors.username.message}</p>
+                    <Input {...register("name")} />
+                    {errors.name && (
+                      <p style={{ color: "red" }}>{errors.name.message}</p>
                     )}
                   </Field.Root>
                   <Field.Root>

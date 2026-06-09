@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   Box,
@@ -12,7 +11,7 @@ import {
   Spinner,
   Center,
 } from "@chakra-ui/react";
-import { Toaster, toaster } from "./ui/toaster";
+import { useQuery } from "@tanstack/react-query";
 
 interface ProductType {
   id: number;
@@ -25,22 +24,18 @@ interface ProductType {
 
 export default function Product() {
   const { id } = useParams<{ id: string }>();
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["user", id],
+    queryFn: async () => {
+      const response = await fetch(`/api/products/${id}`);
+      if (!response.ok) throw new Error("商品情報が取得できませんでした。");
+      return response.json() as Promise<ProductType>;
+    },
+  });
 
-  const [product, setProduct] = useState<ProductType | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  if (isError) return <p>エラー: {error.message}</p>;
 
-  useEffect(() => {
-    fetch(`/api/products/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setProduct(data);
-        setLoading(false);
-      })
-      .catch((error) => console.log("データの取得失敗", error));
-    setLoading(true);
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <Center minH="100vh" flexDirection="column" gap={4}>
         <Spinner color="black.500" size="xl" width="40px" height="40px" />
@@ -51,7 +46,7 @@ export default function Product() {
     );
   }
 
-  if (!product) {
+  if (!data) {
     return (
       <Container maxW="xl" py={20} textAlign="center">
         <Text color="gray.500" mb={4} fontSize="lg">
@@ -64,18 +59,18 @@ export default function Product() {
     );
   }
 
-  const handleAddToCart = (product: ProductType) => {
+  const handleAddToCart = (data: ProductType) => {
     const currentCartData = localStorage.getItem("cart") || "[]";
     const cartItems = JSON.parse(currentCartData);
 
     const existItemIndex = cartItems.findIndex(
-      (item: any) => item.product_id === product.id
+      (item: any) => item.product_id === data.id
     );
     if (existItemIndex > -1) {
       cartItems[existItemIndex].quantity++;
     } else {
       cartItems.push({
-        product_id: product.id,
+        product_id: data.id,
         quantity: 1,
       });
     }
@@ -113,7 +108,7 @@ export default function Product() {
           fontSize="9xl"
           shadow="sm"
         >
-          {product.emoji}
+          {data.emoji}
         </Box>
 
         <Stack gap={6}>
@@ -124,7 +119,7 @@ export default function Product() {
               color="black.600"
               letterSpacing="wider"
             >
-              {product.category}
+              {data.category}
             </Text>
           </HStack>
 
@@ -135,11 +130,11 @@ export default function Product() {
             color="gray.900"
             lineHeight="tight"
           >
-            {product.name}
+            {data.name}
           </Heading>
 
           <Text fontSize="3xl" fontWeight="black" color="gray.900">
-            ¥{product.price.toLocaleString()}
+            ¥{data.price.toLocaleString()}
             <Text
               as="span"
               fontSize="sm"
@@ -156,7 +151,7 @@ export default function Product() {
               商品の説明
             </Text>
             <Text color="gray.600" fontSize="md" lineHeight="relaxed">
-              {product.description}
+              {data.description}
             </Text>
           </Box>
 
@@ -168,7 +163,7 @@ export default function Product() {
               h="56px"
               fontSize="md"
               _hover={{ shadow: "md" }}
-              onClick={() => handleAddToCart(product)}
+              onClick={() => handleAddToCart(data)}
               asChild
             >
               <Link to="/home">カートへ入れる</Link>
