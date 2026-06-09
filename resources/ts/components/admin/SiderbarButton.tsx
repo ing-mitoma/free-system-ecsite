@@ -11,9 +11,9 @@ export default function SidebarButton({ title, page }: SidebarProps) {
       {({ isActive }) => (
         <Button
           w="100%"
-          fontWeight={"bold"}
           variant={isActive ? "solid" : "ghost"}
-          color={isActive ? "white" : "grey"}
+          bg={isActive ? "white" : undefined}
+          color={isActive ? "black" : "grey"}
         >
           {title}
         </Button>

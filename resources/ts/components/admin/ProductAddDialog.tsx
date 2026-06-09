@@ -8,69 +8,70 @@ import {
   Input,
   Textarea,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import {
-  AddProductSchemaType,
+  ProductSchemaType,
   productSchema,
 } from "../validation/AdminProductValidation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface ProductAddDialogProps {
   isAddDialogOpen: boolean;
   setIsAddDialogOpen: (open: boolean) => void;
-  fetchProducts: () => void;
 }
+
+const createProduct = async (submitData: ProductSchemaType) => {
+  const res = await fetch("/api/products", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(submitData),
+  });
+
+  if (!res.ok) {
+    throw new Error("商品の登録に失敗しました");
+  }
+  return res.json();
+};
 
 export default function ProductAddDialog({
   isAddDialogOpen,
   setIsAddDialogOpen,
-  fetchProducts,
 }: ProductAddDialogProps) {
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<AddProductSchemaType>({
+  } = useForm<ProductSchemaType>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: "",
-      price: undefined,
+      price: 0,
       category: "",
       emoji: "",
       description: "",
     },
   });
 
-  const onSubmit = (data: AddProductSchemaType) => {
-    const submitData = {
-      name: data.name,
-      price: data.price,
-      category: data.category,
-      emoji: data.emoji,
-      description: data.description,
-    };
+  const addMutation = useMutation({
+    mutationFn: createProduct,
+    onSuccess: () => {
+      alert("登録が完了しました。");
+      reset();
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      setIsAddDialogOpen(false);
+    },
+    onError: (error: any) => {
+      alert(error.message);
+    },
+  });
 
-    fetch("/api/products", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(submitData),
-    })
-      .then((res) => {
-        if (res.ok) {
-          alert("登録が完了しました。");
-          fetchProducts();
-          setIsAddDialogOpen(false);
-        } else {
-          throw new Error("登録失敗");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setIsAddDialogOpen(true);
-      });
+  const onSubmit = (data: ProductSchemaType) => {
+    addMutation.mutate(data);
   };
   return (
     <Dialog.Root

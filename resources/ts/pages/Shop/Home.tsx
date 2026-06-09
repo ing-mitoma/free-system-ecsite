@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import {
   Box,
   Container,
-  Heading,
   Text,
   SimpleGrid,
   Spinner,
   Center,
 } from "@chakra-ui/react";
 import HomeCard from "../../components/user/UserHomeCard";
+import { useQuery } from "@tanstack/react-query";
 
 interface Product {
   id: number;
@@ -21,21 +19,16 @@ interface Product {
 }
 
 const Home = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["product"],
+    queryFn: async () => {
+      const response = await fetch(`/api/products`);
+      if (!response.ok) throw new Error("商品一覧の取得に失敗しました");
+      return response.json() as Promise<Product[]>;
+    },
+  });
 
-  useEffect(() => {
-    fetch("/api/products")
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data);
-        setLoading(false);
-      })
-      .catch((error) => console.log("データの取得失敗", error));
-    setLoading(true);
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <Center minH="100vh" flexDirection="column" gap={4}>
         <Spinner color="black" size="xl" width="40px" height="40px" />
@@ -45,17 +38,24 @@ const Home = () => {
       </Center>
     );
   }
+  if (isError) {
+    return (
+      <div className="p-8">
+        <p className="text-red-500">エラー: {error.message}</p>
+      </div>
+    );
+  }
 
   return (
     <Box minH="100vh" bg="gray.50" color="gray.800" pb={16}>
       <Container maxW="6xl" mt={12}>
         <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={8}>
-          {products.map((product) => (
+          {data?.map((product) => (
             <HomeCard key={product.id} product={product} />
           ))}
         </SimpleGrid>
 
-        {products.length === 0 && (
+        {data?.length === 0 && (
           <Text textAlign="center" color="gray.400" mt={12}>
             現在、販売中の商品はありません。
           </Text>

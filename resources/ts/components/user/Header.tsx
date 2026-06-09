@@ -59,19 +59,6 @@ export default function Header() {
                 >
                   🛒
                 </IconButton>
-
-                <Badge
-                  colorPalette="pink"
-                  variant="solid"
-                  position="absolute"
-                  top="-1"
-                  right="-1"
-                  borderRadius="full"
-                  px={1.5}
-                  fontSize="10px"
-                >
-                  1
-                </Badge>
               </Link>
             </Box>
           </Flex>

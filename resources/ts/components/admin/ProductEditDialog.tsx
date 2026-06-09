@@ -8,7 +8,14 @@ import {
   Textarea,
   Button,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import {
+  ProductSchemaType,
+  productSchema,
+} from "../validation/AdminProductValidation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Product {
   id: number;
@@ -23,77 +30,86 @@ interface ProductEditDialogProps {
   isEditDialogOpen: boolean;
   setIsEditDialogOpen: (open: boolean) => void;
   editingProduct: Product | null;
-  fetchProducts: () => void;
 }
+const updateProduct = async ({
+  id,
+  data,
+}: {
+  id: number;
+  data: ProductSchemaType;
+}) => {
+  const res = await fetch(`/api/products/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    throw new Error("商品情報の更新に失敗しました");
+  }
+  return res.json();
+};
 
 export default function ProductEditDialog({
   isEditDialogOpen,
   setIsEditDialogOpen,
   editingProduct,
-  fetchProducts,
 }: ProductEditDialogProps) {
-  const [formData, setFormData] = useState({
-    id: "",
-    name: "",
-    price: "",
-    category: "",
-    emoji: "",
-    description: "",
+  const queryClient = useQueryClient();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ProductSchemaType>({
+    resolver: zodResolver(productSchema),
+    defaultValues: {
+      name: "",
+      price: undefined,
+      category: "",
+      emoji: "",
+      description: "",
+    },
   });
-
   useEffect(() => {
     if (editingProduct) {
-      setFormData({
-        id: String(editingProduct.id),
-        name: editingProduct.name,
-        price: String(editingProduct.price),
-        category: editingProduct.category,
-        emoji: editingProduct.emoji,
-        description: editingProduct.description,
+      reset({
+        name: String(editingProduct.name),
+        price: Number(editingProduct.price),
+        category: String(editingProduct.category),
+        emoji: String(editingProduct.emoji),
+        description: String(editingProduct.description),
+      });
+    } else {
+      reset({
+        name: "",
+        price: undefined,
+        category: "",
+        emoji: "",
+        description: "",
       });
     }
-  }, [editingProduct]);
+  }, [editingProduct, reset]);
 
-  const handleEdit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const editMutation = useMutation({
+    mutationFn: updateProduct,
+    onSuccess: () => {
+      alert("更新が完了しました。");
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      setIsEditDialogOpen(false);
+    },
+    onError: (error: any) => {
+      alert(error.message);
+    },
+  });
+  const onSubmit = (data: ProductSchemaType) => {
     if (!editingProduct) return;
-
-    const submitData = {
-      name: formData.name,
-      price: Number(formData.price),
-      category: formData.category,
-      emoji: formData.emoji,
-      description: formData.description,
-    };
-
-    fetch(`/api/products/${editingProduct.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(submitData),
-    })
-      .then((res) => {
-        if (res.ok) {
-          alert("更新が完了しました。");
-          fetchProducts();
-          setIsEditDialogOpen(false);
-          setFormData({
-            id: "",
-            name: "",
-            price: "",
-            category: "",
-            emoji: "",
-            description: "",
-          });
-        } else {
-          throw new Error("更新失敗");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setIsEditDialogOpen(true);
-      });
+    editMutation.mutate({
+      id: editingProduct.id,
+      data: data,
+    });
   };
   return (
     <Dialog.Root
@@ -111,7 +127,7 @@ export default function ProductEditDialog({
         <Dialog.Backdrop />
         <Dialog.Positioner>
           <Dialog.Content>
-            <form onSubmit={handleEdit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <Dialog.Header>
                 <Dialog.Title fontWeight="black" fontSize="xl">
                   商品情報の編集
@@ -124,42 +140,22 @@ export default function ProductEditDialog({
                 <Stack gap={4} my={4}>
                   <Field.Root>
                     <Field.Label>商品名</Field.Label>
-                    <Input
-                      value={formData.name}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          name: e.target.value,
-                        })
-                      }
-                      required
-                    />
+                    <Input {...register("name")} />
+                    {errors.name && (
+                      <p style={{ color: "red" }}>{errors.name.message}</p>
+                    )}
                   </Field.Root>
                   <Field.Root>
                     <Field.Label>価格</Field.Label>
-                    <Input
-                      type="price"
-                      placeholder="1000"
-                      value={formData.price}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          price: e.target.value,
-                        })
-                      }
-                      required
-                    />
+                    <Input {...register("price", { valueAsNumber: true })} />
+                    {errors.price && (
+                      <p style={{ color: "red" }}>{errors.price.message}</p>
+                    )}
                   </Field.Root>
                   <Field.Root>
                     <Field.Label>カテゴリー</Field.Label>
                     <select
-                      value={formData.category}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          category: e.target.value,
-                        })
-                      }
+                      {...register("category")}
                       style={{
                         width: "100%",
                         padding: "8px",
@@ -178,34 +174,25 @@ export default function ProductEditDialog({
                       </option>
                       <option value="ライフスタイル">🥛 ライフスタイル</option>
                     </select>
+                    {errors.category && (
+                      <p style={{ color: "red" }}>{errors.category.message}</p>
+                    )}
                   </Field.Root>
                   <Field.Root>
                     <Field.Label>画像</Field.Label>
-                    <Input
-                      type="emoji"
-                      placeholder=""
-                      value={formData.emoji}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          emoji: e.target.value,
-                        })
-                      }
-                      required
-                    />
+                    <Input {...register("emoji")} />
+                    {errors.emoji && (
+                      <p style={{ color: "red" }}>{errors.emoji.message}</p>
+                    )}
                   </Field.Root>
                   <Field.Root>
                     <Field.Label>商品説明</Field.Label>
-                    <Textarea
-                      value={formData.description}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          description: e.target.value,
-                        })
-                      }
-                      required
-                    />
+                    <Textarea {...register("description")} />
+                    {errors.description && (
+                      <p style={{ color: "red" }}>
+                        {errors.description.message}
+                      </p>
+                    )}
                   </Field.Root>
                 </Stack>
               </Dialog.Body>

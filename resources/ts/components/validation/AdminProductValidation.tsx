@@ -6,11 +6,7 @@ export const productSchema = z.object({
     .number({ message: "数字を入力してください" })
     .min(0, { message: "価格は0円以上にしてください" }),
   category: z.string().min(1, { message: "カテゴリを選択してください" }),
-  emoji: z
-    .string()
-    .max(1, { message: "絵文字は1文字で入力してください" })
-    .optional()
-    .or(z.literal("")),
+  emoji: z.string().optional().or(z.literal("")),
 
   description: z
     .string()
@@ -18,4 +14,4 @@ export const productSchema = z.object({
     .optional(),
 });
 
-export type AddProductSchemaType = z.infer<typeof productSchema>;
+export type ProductSchemaType = z.infer<typeof productSchema>;
