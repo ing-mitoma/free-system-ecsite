@@ -40,6 +40,7 @@ export default function AdminLogin() {
     mutationFn: async (formData: LoginSchemaType) => {
       const response = await fetch("/api/admin/login", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
@@ -53,8 +54,7 @@ export default function AdminLogin() {
       }
       return resData;
     },
-    onSuccess: (data) => {
-      localStorage.setItem("admin_user", JSON.stringify(data.user));
+    onSuccess: () => {
       reset();
       navigate("/admin/home");
     },
