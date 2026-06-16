@@ -15,7 +15,6 @@ interface Product {
   price: number;
   category: string;
   emoji: string;
-  is_new: boolean;
 }
 
 const Home = () => {

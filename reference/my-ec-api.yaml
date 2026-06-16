@@ -1,0 +1,203 @@
+openapi: 3.1.0
+x-stoplight:
+  id: ywidrrizbxpae
+info:
+  title: EC Site API Specification
+  version: '1.0'
+  description: ECサイトのフロントエンドとバックエンドを繋ぐためのAPI定義書です。
+servers:
+  - url: 'http://localhost:5174'
+paths:
+  '/users/{userId}':
+    parameters:
+      - schema:
+          type: integer
+        name: userId
+        in: path
+        required: true
+        description: Id of an existing user.
+    get:
+      summary: 管理者情報の取得
+      tags: []
+      responses:
+        '200':
+          description: User Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                Get User Alice Smith:
+                  value:
+                    id: 142
+                    firstName: Alice
+                    lastName: Smith
+                    email: alice.smith@gmail.com
+                    dateOfBirth: '1997-10-31'
+                    emailVerified: true
+                    signUpDate: '2019-08-24'
+        '404':
+          description: User Not Found
+      operationId: get-users-userId
+      description: Retrieve the information of the user with the matching user ID.
+    post:
+      summary: 管理者情報の新規作成
+      operationId: post-users-userId
+      responses:
+        '200':
+          description: OK
+    delete:
+      summary: 管理者情報の削除
+      operationId: delete-users-userId
+      responses:
+        '200':
+          description: OK
+      description: ''
+    put:
+      summary: 管理者情報の更新
+      operationId: put-users-userId
+      responses:
+        '200':
+          description: OK
+  /user:
+    get:
+      summary: 管理者一覧取得
+      operationId: get-user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      description: ''
+      requestBody:
+        content: {}
+  /products:
+    get:
+      summary: 商品一覧取得
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+                  x-stoplight:
+                    id: dt584h0pnhawd
+          headers: {}
+      operationId: get-products-id
+      description: 商品一覧の取得
+      parameters:
+        - schema:
+            type: string
+          in: query
+    parameters: []
+  '/products/{Id}':
+    parameters:
+      - schema:
+          type: string
+        name: Id
+        in: path
+        required: true
+    get:
+      summary: 商品詳細取得
+      tags: []
+      responses:
+        '200':
+          description: User Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: 商品が見つかりません。
+      operationId: post-products-Id
+      description: 指定されたIDに対応する商品の詳細情報を取得します。
+    post:
+      summary: ''
+      operationId: post-products-Id
+      responses:
+        '200':
+          description: OK
+    delete:
+      summary: ''
+      operationId: delete-products-Id
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: ''
+      operationId: put-products-Id
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    User:
+      title: User
+      type: object
+      examples:
+        - id: 142
+          firstName: Alice
+          lastName: Smith
+          email: alice.smith@gmail.com
+          dateOfBirth: '1997-10-31'
+          emailVerified: true
+          signUpDate: '2019-08-24'
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the given user.
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        emailVerified:
+          type: boolean
+          description: Set to true if the user's email has been verified.
+        createDate:
+          type: string
+          format: date
+          description: The date that the user was created.
+      required:
+        - id
+        - firstName
+        - lastName
+        - email
+        - emailVerified
+    Product:
+      title: Product
+      x-stoplight:
+        id: bg042lsr8mm77
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          x-stoplight:
+            id: q3pz5u9sb070l
+        price:
+          type: number
+          x-stoplight:
+            id: m1g59kkwlw5u0
+        category:
+          type: string
+          x-stoplight:
+            id: 1k8z13h4oc103
+        emoji:
+          type: string
+          x-stoplight:
+            id: fihmbinlfwl8g
+        description:
+          type: string
+          x-stoplight:
+            id: n2zpxzge46452
