@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -17,9 +17,9 @@ import {
 } from "../../components/validation/AdminLoginValidation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 
 export default function AdminLogin() {
-  const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
@@ -35,28 +35,37 @@ export default function AdminLogin() {
       password: "",
     },
   });
-  const onSubmit = (data: LoginSchemaType) => {
-    fetch("/api/admin/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then(async (res) => {
-        const resData = await res.json();
-        if (res.ok) {
-          localStorage.setItem("admin_user", JSON.stringify(resData.user));
-          navigate("/admin/home");
-          reset();
-        } else {
-          throw new Error(resData.message || "ログインに失敗しました。");
-        }
-      })
-      .catch((error) => {
-        setErrorMessage(error.message || "ログインに失敗しました。");
+
+  const loginMutation = useMutation({
+    mutationFn: async (formData: LoginSchemaType) => {
+      const response = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(formData),
       });
+      const resData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(resData.message || "ログインに失敗しました。");
+      }
+      return resData;
+    },
+    onSuccess: (data) => {
+      localStorage.setItem("admin_user", JSON.stringify(data.user));
+      reset();
+      navigate("/admin/home");
+    },
+    onError: (error: Error) => {
+      setErrorMessage(error.message);
+    },
+  });
+
+  const onSubmit = (data: LoginSchemaType) => {
+    setErrorMessage("");
+    loginMutation.mutate(data);
   };
 
   return (

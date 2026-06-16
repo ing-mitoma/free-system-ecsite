@@ -25,7 +25,7 @@ interface ProductType {
 export default function Product() {
   const { id } = useParams<{ id: string }>();
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["user", id],
+    queryKey: ["product", id],
     queryFn: async () => {
       const response = await fetch(`/api/products/${id}`);
       if (!response.ok) throw new Error("商品情報が取得できませんでした。");
