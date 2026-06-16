@@ -7,8 +7,12 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ onLogout }: SidebarProps) {
-  const handleLogout = () => {
-    localStorage.removeItem("admin_logged_in");
+  const handleLogout = async () => {
+    await fetch("/api/admin/logout", {
+      method: "POST",
+      credentials: "include",
+      headers: { Accept: "application/json" },
+    });
     onLogout();
   };
   return (
